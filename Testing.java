@@ -1,26 +1,52 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.ACCELERATION;
-import static ca.mcgill.ecse211.lab5.Resources.FORWARD_SPEED;
-import static ca.mcgill.ecse211.lab5.Resources.ROTATE_SPEED;
-import static ca.mcgill.ecse211.lab5.Resources.TILE_SIZE;
-import static ca.mcgill.ecse211.lab5.Resources.TIMEOUT_PERIOD;
-import static ca.mcgill.ecse211.lab5.Resources.TRACK;
-import static ca.mcgill.ecse211.lab5.Resources.WHEEL_RAD;
-import static ca.mcgill.ecse211.lab5.Resources.launchMotor1;
-import static ca.mcgill.ecse211.lab5.Resources.launchMotor2;
-import static ca.mcgill.ecse211.lab5.Resources.leftMotor;
-import static ca.mcgill.ecse211.lab5.Resources.rightMotor;
+import static ca.mcgill.ecse211.team4.Resources.ACCELERATION;
+import static ca.mcgill.ecse211.team4.Resources.FORWARD_SPEED;
+import static ca.mcgill.ecse211.team4.Resources.ROTATE_SPEED;
+import static ca.mcgill.ecse211.team4.Resources.TILE_SIZE;
+import static ca.mcgill.ecse211.team4.Resources.TIMEOUT_PERIOD;
+import static ca.mcgill.ecse211.team4.Resources.TRACK;
+import static ca.mcgill.ecse211.team4.Resources.US_SENSOR;
+import static ca.mcgill.ecse211.team4.Resources.WHEEL_RAD;
+import static ca.mcgill.ecse211.team4.Resources.launchMotor1;
+import static ca.mcgill.ecse211.team4.Resources.launchMotor2;
+import static ca.mcgill.ecse211.team4.Resources.leftMotor;
+import static ca.mcgill.ecse211.team4.Resources.rightMotor;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.robotics.RegulatedMotor;
 
 public class Testing {
-  public Testing()
+ /**
+  * time to run code 1000 times
+  */
+  public static void codePerformanceTest(UltrasonicPoller poller)
   {
-    
+    long t1 = System.nanoTime();
+    for(int i = 0; i < 10000; i++)
+    {
+      US_SENSOR.getDistanceMode().fetchSample(new float[US_SENSOR.sampleSize()], 0); // acquire distance data in meters
+    }
+    long t2 = System.nanoTime();
+    System.out.println("Time to run: " + (t2 - t1) / 1000000);
+  }
+  /**
+   * Test only ultrasonic in a loop. Press back to exit.
+   */
+  public static void ultrasonicLocalitzationTest()
+  {
+ 
+    while(true)
+    {
+      Team4.sleepFor(1000);
+      UltrasonicLocalizer.RisingEdge();
+      if(Button.waitForAnyPress() == Button.ID_ESCAPE)
+        break;
+    }
+    System.exit(0);
   }
   public static void trackTest()
   {
@@ -36,7 +62,7 @@ public class Testing {
     rightMotor.rotate(-convertAngle(360), false);
     leftMotor.stop();
     rightMotor.stop();
-    Lab5.sleepFor(2000);
+    Team4.sleepFor(2000);
     
     Sound.beepSequenceUp();
    // Navigation.turn(180);
@@ -55,13 +81,13 @@ public class Testing {
     launch(115);
     launchMotor1.stop();
     launchMotor2.stop();
-    Lab5.sleepFor(500);
+    Team4.sleepFor(500);
     
     launch(-100);
     launchMotor1.flt();
     launchMotor2.flt();
  
-    Lab5.sleepFor(3000);
+    Team4.sleepFor(3000);
     Sound.beepSequence();
     launch(115);
   //  } */
@@ -87,7 +113,7 @@ public class Testing {
         /***
          *  Sleep for 2 seconds
          */
-        Lab5.sleepFor(TIMEOUT_PERIOD);
+        Team4.sleepFor(TIMEOUT_PERIOD);
 
         for (int i = 0; i < 1; i++) {
           /**

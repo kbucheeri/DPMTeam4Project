@@ -1,4 +1,4 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
@@ -40,7 +40,7 @@ public class Resources {
   /**
    * The robot width in centimeters.
    */
-  public static final double TRACK = 12.2;
+  public static final double TRACK = 10;
   /**
    * Wall follower speed
    */
@@ -105,7 +105,7 @@ public class Resources {
   /**
    * The color sensor.
    */
-   public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
+  // public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
   /**
    * The ultrasonic sensor
    */

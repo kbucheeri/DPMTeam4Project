@@ -1,10 +1,6 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.colorSensor;
-import static ca.mcgill.ecse211.lab5.Resources.leftMotor;
-import static ca.mcgill.ecse211.lab5.Resources.odometer;
-import static ca.mcgill.ecse211.lab5.Resources.rightMotor;
-import static ca.mcgill.ecse211.lab5.Resources.*;
+import static ca.mcgill.ecse211.team4.Resources.*;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;

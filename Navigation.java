@@ -1,9 +1,13 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.*;
-import ca.mcgill.ecse211.lab5.Resources;
+import static ca.mcgill.ecse211.team4.Resources.*;
+import ca.mcgill.ecse211.team4.Resources;
 import lejos.hardware.Sound;
-
+/**
+ * Handles everything related to Navigation - calculating movement vectors, and issuing motor commands 
+ * @author Khaled Bucheeri
+ *
+ */
 public class Navigation {
   private static boolean navigationStatus = false;
 
@@ -51,76 +55,11 @@ public class Navigation {
     }
 */
     navigationStatus = false; // only sets it to false after travel function terminates
-    // System.out.println("ended navigation!");
+
   }
 
   public static int TURN_AMOUNT = 125;
 
-//  // public static void obstacleInterrupt()
-//  /**
-//   * dumb implementation. Rotates orthogonally to the block, travels worst case scenario to avoid 21 cm left, 21 cm
-//   * right 21 cm forward Needs to be in seperate thread from the ultrasonic poller (ObstacleAvoider)
-//   */
-//  public static void obstacleAvoiderSimple(double x, double y, double theta) {
-//
-//    System.out.println("entered the dragon!");
-//    leftMotor.stop();
-//    rightMotor.stop();
-//    int dir = crossProduct();
-//    turnTo(theta);
-//    try {
-//      Thread.sleep(300); // time for readings to stabilize
-//    } catch (InterruptedException e1) {
-//      e1.printStackTrace();
-//    }
-//    turn(-90 * dir);
-//    leftMotor.setSpeed(FOLLOWER_SPEED);
-//    rightMotor.setSpeed(FOLLOWER_SPEED);
-//    int dist = UltrasonicPoller.getDistance();
-//    /**
-//     * "Wall follower 1"
-//     */
-//    while (true) {
-//      leftMotor.rotate(convertDistance(10), true);
-//      rightMotor.rotate(convertDistance(10), false);
-//      turn(TURN_AMOUNT * dir);
-//
-//      /*
-//       * wait for an amount of time for readings to stabilize
-//       */
-//      try {
-//        Thread.sleep(SLEEP_TIME); // time for readings to stabilize
-//      } catch (InterruptedException e1) {
-//        e1.printStackTrace();
-//      }
-//      dist = UltrasonicPoller.getDistance();
-//      if (dist > BANDCENTRE)
-//        break;
-//      turn(-TURN_AMOUNT * dir);
-//    }
-//    Sound.beep();
-//    turnTo(theta - 25 * dir); // original angle + extra amount so it doesn't crash into block
-//    Lab5.sleepFor(SLEEP_TIME);
-//    while (true) {
-//      leftMotor.rotate(convertDistance(26), true);
-//      rightMotor.rotate(convertDistance(26), false);
-//      turn(TURN_AMOUNT * dir);
-//      try {
-//        Thread.sleep(SLEEP_TIME); // time for readings to stabilize
-//      } catch (InterruptedException e1) {
-//        e1.printStackTrace();
-//      }
-//      dist = UltrasonicPoller.getDistance();
-//
-//      if (dist > BANDCENTRE)
-//        break;
-//      turn(-TURN_AMOUNT * dir);
-//    }
-//    leftMotor.stop();
-//    rightMotor.stop();
-//    Sound.beep();
-//    travelTo(x, y);
-//  }
 
   /**
    * loads the waypoints in the navigator

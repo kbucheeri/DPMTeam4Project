@@ -1,17 +1,6 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.ACCELERATION;
-import static ca.mcgill.ecse211.lab5.Resources.FORWARD_SPEED;
-import static ca.mcgill.ecse211.lab5.Resources.ROTATE_SPEED;
-import static ca.mcgill.ecse211.lab5.Resources.TILE_SIZE;
-import static ca.mcgill.ecse211.lab5.Resources.TIMEOUT_PERIOD;
-import static ca.mcgill.ecse211.lab5.Resources.TRACK;
-import static ca.mcgill.ecse211.lab5.Resources.WHEEL_RAD;
-import static ca.mcgill.ecse211.lab5.Resources.launchMotor1;
-import static ca.mcgill.ecse211.lab5.Resources.launchMotor2;
-import static ca.mcgill.ecse211.lab5.Resources.leftMotor;
-import static ca.mcgill.ecse211.lab5.Resources.rightMotor;
-import static ca.mcgill.ecse211.lab5.Resources.*;
+import static ca.mcgill.ecse211.team4.Resources.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -40,7 +29,7 @@ public class Launcher {
       moveLaunchers(100);
       launchMotor1.stop();
       launchMotor2.stop();
-      Lab5.sleepFor(500);
+      Team4.sleepFor(500);
       resetLauncher();
       Sound.buzz();
       launchMotor1.flt();
@@ -48,7 +37,7 @@ public class Launcher {
       if (Button.waitForAnyPress(0) == Button.ID_ESCAPE)
         break;
       Sound.beepSequence();
-      Lab5.sleepFor(3000);
+      Team4.sleepFor(3000);
     }
     System.exit(0);
   }
@@ -70,7 +59,7 @@ public class Launcher {
     int initialSpeed = launchMotor1.getSpeed();
     launchMotor1.setSpeed(RESET_SPEED);
     launchMotor2.setSpeed(RESET_SPEED);
-    Lab5.sleepFor(200);
+    Team4.sleepFor(200);
     moveLaunchers(-150);
     /**
      * set it back to the launch speed.
@@ -101,7 +90,7 @@ public class Launcher {
       moveLaunchers(100);
       launchMotor1.stop();
       launchMotor2.stop();
-      Lab5.sleepFor(500);
+      Team4.sleepFor(500);
       resetLauncher();
       Sound.buzz();
       launchMotor1.flt();
@@ -122,7 +111,7 @@ public class Launcher {
         */
       System.out.println("speed: " + speed);
       Sound.beepSequence();
-      Lab5.sleepFor(1000);
+      Team4.sleepFor(1000);
     }
     System.exit(0);
   }

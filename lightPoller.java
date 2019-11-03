@@ -1,9 +1,9 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.colorSensor;
-import static ca.mcgill.ecse211.lab5.Resources.leftMotor;
-import static ca.mcgill.ecse211.lab5.Resources.odometer;
-import static ca.mcgill.ecse211.lab5.Resources.rightMotor;
+import static ca.mcgill.ecse211.team4.Resources.colorSensor;
+import static ca.mcgill.ecse211.team4.Resources.leftMotor;
+import static ca.mcgill.ecse211.team4.Resources.odometer;
+import static ca.mcgill.ecse211.team4.Resources.rightMotor;
 import lejos.hardware.Sound;
 
 public class lightPoller implements Runnable {

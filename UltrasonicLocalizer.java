@@ -1,14 +1,20 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.leftMotor;
-import static ca.mcgill.ecse211.lab5.Resources.rightMotor;
-import ca.mcgill.ecse211.lab5.Resources;
+import static ca.mcgill.ecse211.team4.Resources.leftMotor;
+import static ca.mcgill.ecse211.team4.Resources.rightMotor;
+import ca.mcgill.ecse211.team4.Resources;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
-
+/**
+ * This class performs Ultrasonic localization of both types (Falling and Rising Edge).
+ * @author Khaled Bucheeri
+ *
+ */
 public class UltrasonicLocalizer {
   public static boolean sweepDone = false; // currently sweeping
-
+/**
+ * Perform falling edge localization
+ */
   public static void FallingEdge() {
     // record first edge angle, second edge angle, get average.
     int firstEdge = 370; // initalize to impossible value for the conditions later on
@@ -37,7 +43,7 @@ public class UltrasonicLocalizer {
     }
     leftMotor.backward();
     rightMotor.forward();
-    Lab5.sleepFor(500);
+    Team4.sleepFor(500);
     prevData = 0;
     while (secondEdge == 370) {
       int theta = (int) Resources.odometer.getXYT()[2];
@@ -73,7 +79,9 @@ public class UltrasonicLocalizer {
 
     Navigation.turnTo(0);
   }
-
+/**
+ * Perform Rising Edge Localization
+ */
   public static void RisingEdge() {
     // record first edge angle, second edge angle, get average.
     int firstEdge = 370; // initalize to impossible value for the conditions later on
@@ -102,7 +110,7 @@ public class UltrasonicLocalizer {
     }
     leftMotor.backward();
     rightMotor.forward();
-    Lab5.sleepFor(300);
+    Team4.sleepFor(300);
     prevData = 100;
     
     while (secondEdge == 370) {
