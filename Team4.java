@@ -88,11 +88,11 @@ public class Team4 {
     Sound.buzz();
     // increase sleep time so the thread doesnt consume as much time
     UltrasonicPoller.setSleepTime(2000);
-    new Thread(new lightPoller()).start();
+    //new Thread(new lightPoller()).start();
+    //TODO start the timer
    // Button.waitForAnyPress();
     LightLocalizer.localizeDistance();
     sleepFor(1000);
-    lightPoller.changeSleepTime(1000);
     // LightLocalizer.localizeAngle();
   }
 
