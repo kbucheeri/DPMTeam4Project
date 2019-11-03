@@ -23,6 +23,8 @@ public class Team4 {
     new Thread(new Display()).start();
     double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
     new Thread(odometer).start();
+    Testing.UltrasonicTester();
+    Launcher.launchThenWaitTest();
     UltrasonicPoller poller = new UltrasonicPoller();
     new Thread(poller).start();
     Testing.codePerformanceTest(poller);

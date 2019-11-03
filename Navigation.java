@@ -58,8 +58,6 @@ public class Navigation {
 
   }
 
-  public static int TURN_AMOUNT = 125;
-
 
   /**
    * loads the waypoints in the navigator

@@ -20,36 +20,50 @@ import lejos.hardware.Sound;
 import lejos.robotics.RegulatedMotor;
 
 public class Testing {
- /**
-  * time to run code 1000 times
-  */
-  public static void codePerformanceTest(UltrasonicPoller poller)
-  {
+  /**
+   * Get ultrasonic data. Press any button to get readings from the ultrasnic sensor 10 times.
+   */
+  public static void UltrasonicTester() {
+    while (true) {
+      float[] usData = new float[US_SENSOR.sampleSize()];
+      for (int i = 0; i < 10; i++) {
+        US_SENSOR.getDistanceMode().fetchSample(usData, 0); // acquire distance data in meters
+        int distance = (int) (usData[0] * 100.0); // extract from buffer, convert to cm, cast to int
+        System.out.println(distance); //print data to screen
+        Team4.sleepFor(100);
+      }
+      Button.waitForAnyPress();
+      System.out.println("\n\n");
+    }
+  }
+
+  /**
+   * time to run code 1000 times
+   */
+  public static void codePerformanceTest(UltrasonicPoller poller) {
     long t1 = System.nanoTime();
-    for(int i = 0; i < 10000; i++)
-    {
+    for (int i = 0; i < 10000; i++) {
       US_SENSOR.getDistanceMode().fetchSample(new float[US_SENSOR.sampleSize()], 0); // acquire distance data in meters
     }
     long t2 = System.nanoTime();
     System.out.println("Time to run: " + (t2 - t1) / 1000000);
   }
+
   /**
    * Test only ultrasonic in a loop. Press back to exit.
    */
-  public static void ultrasonicLocalitzationTest()
-  {
- 
-    while(true)
-    {
+  public static void ultrasonicLocalitzationTest() {
+
+    while (true) {
       Team4.sleepFor(1000);
       UltrasonicLocalizer.RisingEdge();
-      if(Button.waitForAnyPress() == Button.ID_ESCAPE)
+      if (Button.waitForAnyPress() == Button.ID_ESCAPE)
         break;
     }
     System.exit(0);
   }
-  public static void trackTest()
-  {
+
+  public static void trackTest() {
     leftMotor.stop();
     rightMotor.stop();
     launchMotor1.setAcceleration(999999);
@@ -63,47 +77,43 @@ public class Testing {
     leftMotor.stop();
     rightMotor.stop();
     Team4.sleepFor(2000);
-    
+
     Sound.beepSequenceUp();
-   // Navigation.turn(180);
+    // Navigation.turn(180);
     launchMotor1.setSpeed(8000);
     launchMotor2.setSpeed(8000);
-    
-  /*  for(int i = 0; i < 5; i ++)
-    {Resources.launchMotor1.rotate(-(70 + 5 * i), true);
-    Resources.launchMotor2.rotate(-(70 + 5 * i), false);
-    Resources.launchMotor1.stop();    
-    Resources.launchMotor2.stop();
-    Lab5.sleepFor(1000);
+
     /*
-     * reset position
+     * for(int i = 0; i < 5; i ++) {Resources.launchMotor1.rotate(-(70 + 5 * i), true);
+     * Resources.launchMotor2.rotate(-(70 + 5 * i), false); Resources.launchMotor1.stop();
+     * Resources.launchMotor2.stop(); Lab5.sleepFor(1000); /* reset position
      */
     launch(115);
     launchMotor1.stop();
     launchMotor2.stop();
     Team4.sleepFor(500);
-    
+
     launch(-100);
     launchMotor1.flt();
     launchMotor2.flt();
- 
+
     Team4.sleepFor(3000);
     Sound.beepSequence();
     launch(115);
-  //  } */
+    // } */
     System.exit(0);
   }
-  public static void launch(int angle)
-  {
+
+  public static void launch(int angle) {
     Resources.launchMotor1.rotate(-angle, true);
     Resources.launchMotor2.rotate(-angle, false);
   }
-  public static void lightSensorTest()
-  {
+
+  public static void lightSensorTest() {
     (new Thread() {
       public void run() {
         /**
-         *  reset the motors
+         * reset the motors
          */
         leftMotor.stop();
         rightMotor.stop();
@@ -111,7 +121,7 @@ public class Testing {
         rightMotor.setAcceleration(ACCELERATION);
 
         /***
-         *  Sleep for 2 seconds
+         * Sleep for 2 seconds
          */
         Team4.sleepFor(TIMEOUT_PERIOD);
 
@@ -129,9 +139,9 @@ public class Testing {
           } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-          }   
+          }
         }
-        leftMotor.setSpeed(0); //added these so that we can easily check if robot is travelling in a straight line 
+        leftMotor.setSpeed(0); // added these so that we can easily check if robot is travelling in a straight line
 
         rightMotor.setSpeed(0);
         UltrasonicLocalizer.sweepDone = true;
@@ -141,12 +151,13 @@ public class Testing {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-        
-       
+
+
         System.exit(0);
       }
     }).start();
   }
+
   /**
    * Converts input distance to the total rotation of each wheel needed to cover that distance.
    * 
@@ -156,23 +167,22 @@ public class Testing {
   public static int convertDistance(double distance) {
     return (int) ((180.0 * distance) / (Math.PI * WHEEL_RAD));
   }
+
   /**
-   * Converts input angle to the total rotation of each wheel needed to rotate the robot by that
-   * angle.
+   * Converts input angle to the total rotation of each wheel needed to rotate the robot by that angle.
    * 
    * @param angle
    * @return the wheel rotations necessary to rotate the robot by the angle
    */
-  public static void Test()
-  {
-    while(true)
-    {
-    leftMotor.setSpeed(500);
-    rightMotor.setSpeed(500);
-    System.out.println("");
+  public static void Test() {
+    while (true) {
+      leftMotor.setSpeed(500);
+      rightMotor.setSpeed(500);
+      System.out.println("");
     }
   }
-public static int convertAngle(double angle) {
-  return convertDistance(Math.PI * TRACK * angle / 360.0);
-}
+
+  public static int convertAngle(double angle) {
+    return convertDistance(Math.PI * TRACK * angle / 360.0);
+  }
 }
