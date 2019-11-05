@@ -1,6 +1,6 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.*;
+import static ca.mcgill.ecse211.team4.Resources.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -142,7 +142,6 @@ public class Odometer implements Runnable {
    * Writes the current position and orientation of th e robot onto the odoData array. {@code odoData[0] =
    * x, odoData[1] = y; odoData[2] = theta;}
    * 
-   * @param position the array to store the odometer data
    * @return the odometer data.
    */
   public double[] getXYT() {

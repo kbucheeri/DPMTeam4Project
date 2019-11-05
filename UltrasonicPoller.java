@@ -1,10 +1,10 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.*;
+import static ca.mcgill.ecse211.team4.Resources.*;
 import java.util.Arrays;
 
 /**
- * Samples the US sensor and invokes the selected controller on each cycle.
+ * Samples the US sensor and applies filtering.
  * 
  * Control of the wall follower is applied periodically by the UltrasonicPoller thread. The while
  * loop at the bottom executes in a loop. Assuming that the us.fetchSample, and cont.processUSData
@@ -16,6 +16,9 @@ public class UltrasonicPoller implements Runnable {
 
   private float[] usData;
 
+	/**
+	Creates an instance of a poller, initalizing the buffer array.
+	*/
   public UltrasonicPoller() {
     usData = new float[US_SENSOR.sampleSize()];
     for(int i = 0; i < buffer.length; i++)
@@ -36,16 +39,14 @@ public class UltrasonicPoller implements Runnable {
   public void LPF() { // is this a good idea? rapidly changing corners.
    
   }
-//made filter implementation dependent.
+	/**
+	Stores data in the buffer array, then calculates the harmonic mean.
+	*/
  void filter(int distance) { // FILTER_OUT = 20. if 20 bad samples in a row?
    if (distance >= -50 && distance <= 255) { 
      /**
       * shift all values to left, i.e moving buffer
       */
-     //recursive formula to calculate the harmonic mean
-    /* average = buffer.length/
-         ((buffer.length)/average - 1.0 / buffer[0] + 1.0 / distance);*/
-     
      for(int i = 0; i < buffer.length - 1; i++)
      {
       buffer[i] = buffer[i+1]; 

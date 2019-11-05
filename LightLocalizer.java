@@ -1,14 +1,13 @@
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.colorSensor;
-import static ca.mcgill.ecse211.lab5.Resources.leftMotor;
-import static ca.mcgill.ecse211.lab5.Resources.odometer;
-import static ca.mcgill.ecse211.lab5.Resources.rightMotor;
-import static ca.mcgill.ecse211.lab5.Resources.*;
+import static ca.mcgill.ecse211.team4.Resources.*;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
-
+/**
+ * Performs ultrasonic localization
+ *
+ */
 public class LightLocalizer {
   public static int[] buffer = new int[5];
 
@@ -16,7 +15,7 @@ public class LightLocalizer {
   /**
    * Performs light localization
    * Assumes it starts facing 0 degrees in the corner block
-   * Makes the robot at 1,1
+   * Makes the robot go to the closest intersection of the axes
    */
   public static void localizeDistance() {
     /**
@@ -106,7 +105,7 @@ public class LightLocalizer {
   }
 
  /**
-  * performs angle correction to 0,0.
+  * performs angle correction to 0,0 if at an intersection
   */
  public static void localizeAngle()
  {

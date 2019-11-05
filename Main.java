@@ -1,18 +1,19 @@
 /**
  * Osman Warsi and Khalid Bucheeri
  */
-package ca.mcgill.ecse211.lab5;
+package ca.mcgill.ecse211.team4;
 
-import static ca.mcgill.ecse211.lab5.Resources.*;
+import static ca.mcgill.ecse211.team4.Resources.*;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 
 /**
- * The main driver class for the odometry lab.
+ * The main driver class for the entire program.
+ * @version 1.00
  */
-public class Lab5 {
+public class Main {
 
   /**
    * The main entry point.
@@ -55,25 +56,9 @@ public class Lab5 {
   }
 
 
+  
   /**
-   * Asks the user whether rising or falling edge localization should be used
-   * 
-   * @return the user choice
-   */
-  private static int chooseType() {
-    int buttonChoice;
-    Display.showText("< Left | Right >", "   " + "    |        ", " Stationary Launch   " + "   | Mobile Launch ",
-        " <| >" + "  ", "       | ");
-
-    do {
-      buttonChoice = Button.waitForAnyPress(); // left or right press
-    } while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-    return buttonChoice;
-
-  }
-
-  /**
-   * initiates localization routines
+   * initiates localization routines (ultrasonic, light)
    */
   private static void localize() {
     System.out.println("max speed: " + launchMotor1.getMaxSpeed());
@@ -93,7 +78,7 @@ public class Lab5 {
   }
 
   /**
-   * Travels to face launch point T
+   * Travels to the launch point on the island
    * 
    * @param Tx - centre of the square x coordinate
    * @param Ty - centre of the square y coordinate
