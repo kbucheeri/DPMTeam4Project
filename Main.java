@@ -27,7 +27,7 @@ public class Main {
     new Thread(odometer).start();
     System.out.println("max speed: " + launchMotor1.getMaxSpeed());
     UltrasonicPoller usPoller = new UltrasonicPoller();
-    Timer usTimer = new Timer(60, usPoller);
+    Timer usTimer = new Timer(100, usPoller);
     usTimer.start();
     sleepFor(1000);
     UltrasonicLocalizer.RisingEdge();
