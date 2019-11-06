@@ -29,7 +29,7 @@ public class Main {
     UltrasonicPoller usPoller = new UltrasonicPoller();
     Timer usTimer = new Timer(60, usPoller);
     usTimer.start();
-    sleepFor(800);
+    sleepFor(1000);
     UltrasonicLocalizer.RisingEdge();
     sleepFor(500);
     Sound.buzz();
