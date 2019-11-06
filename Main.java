@@ -26,17 +26,26 @@ public class Main {
    // double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
     new Thread(odometer).start();
     System.out.println("max speed: " + launchMotor1.getMaxSpeed());
-    UltrasonicPoller usPoller = new UltrasonicPoller();
+  /*  UltrasonicPoller usPoller = new UltrasonicPoller();
     Timer usTimer = new Timer(100, usPoller);
     usTimer.start();
     sleepFor(1000);
     UltrasonicLocalizer.RisingEdge();
-    sleepFor(500);
+    sleepFor(500); 
     Sound.buzz();
     usTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
     System.exit(0);
-    
-    
+    */
+    lightPoller lPoller = new lightPoller();
+    Timer lightTimer = new Timer(100, lPoller);
+    lightTimer.start();
+    sleepFor(1000);
+    lightPoller.t = true;
+    Navigation.travelTo(0, TILE_SIZE * 5);
+    sleepFor(500); 
+    Sound.buzz();
+    lightTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
+    System.exit(0);
     
     
     Button.waitForAnyPress();
@@ -84,11 +93,8 @@ public class Main {
     sleepFor(500);
     Sound.buzz();
     usTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
-    new Thread(new lightPoller()).start();
+   // new Thread(new lightPoller()).start();
    // Button.waitForAnyPress();
-    LightLocalizer.localizeDistance();
-    sleepFor(1000);
-    lightPoller.changeSleepTime(1000);
     // LightLocalizer.localizeAngle();
   }
 

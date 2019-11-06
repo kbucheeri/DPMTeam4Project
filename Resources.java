@@ -103,9 +103,10 @@ public class Resources {
   public static final EV3LargeRegulatedMotor launchMotor2 = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 
   /**
-   * The color sensor.
+   * The color sensors.
    */
-  // public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
+   public static final EV3ColorSensor lightSensor = new EV3ColorSensor(LocalEV3.get().getPort("S2"));
+   public static final EV3ColorSensor rightSensor = new EV3ColorSensor(LocalEV3.get().getPort("S3"));
   /**
    * The ultrasonic sensor
    */
