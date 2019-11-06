@@ -4,7 +4,7 @@ import static ca.mcgill.ecse211.team4.Resources.*;
 import ca.mcgill.ecse211.team4.Resources;
 import lejos.hardware.Sound;
 /**
- * Handles everything related to Navigation - calculating movement vectors, and issuing motor commands 
+ * Contains all the static methods related to navigation
  * @author Khaled Bucheeri
  *
  */
@@ -55,11 +55,8 @@ public class Navigation {
     }
 */
     navigationStatus = false; // only sets it to false after travel function terminates
-
+    // System.out.println("ended navigation!");
   }
-
-  public static int TURN_AMOUNT = 125;
-
 
   /**
    * loads the waypoints in the navigator
@@ -113,7 +110,7 @@ public class Navigation {
   }
 
   /**
-   * Turns to face a point (X, Y)
+   * Turns to face a point (X, Y) in absolute position
    * 
    * @param x
    * @param y
@@ -164,7 +161,7 @@ public class Navigation {
    *
    * @return direction of the cross product of the distance and movement. This is the direction of axis of rotation. 1
    *         if clockwise, -1 otherwise Used to determine whether robot should turn left or right if it detects obstacle
-   *         so that it doesnt fall off
+   *         so that it bump into wall
    */
   public static int crossProduct() {
     double[] position = odometer.getXYT();

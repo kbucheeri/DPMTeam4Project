@@ -5,35 +5,43 @@ import static ca.mcgill.ecse211.team4.Resources.leftMotor;
 import static ca.mcgill.ecse211.team4.Resources.odometer;
 import static ca.mcgill.ecse211.team4.Resources.rightMotor;
 import lejos.hardware.Sound;
-import lejos.utility.TimerListener;
-
-public class lightPoller implements TimerListener {
-	public lightPoller()
-	{
-	    initalize(buffer);
-	}
+/**
+ * Samples the light sensor and applies filtering and difference calculations.
+ *
+ */
+public class lightPoller implements Runnable {
   public static int[] buffer = new int[5];
   public static int getIntensity()
   {
     return diff;
   }
+  public static int SLEEP_TIME = 70;
+  public static void changeSleepTime(int time)
+  {
+    SLEEP_TIME = time;
+  }
   /**
-   * calculates the intensity from the light sensor and applies slight filtering
-   * in the form of the root mean square (rms)
+   * calculates the intensity from the light sensor and applies rudimentary filtering In the form of the arithmetic
+   * mean.
+   * 
    * @return The average of the previous light sensor intensity values.
    */
   public static int calculateIntensity() {
     float[] lightData = new float[3];
-    colorSensor.getRedMode().fetchSample(lightData, 0);
+    colorSensor.getRGBMode().fetchSample(lightData, 0);
     /**
      * Resizing the actual intensity values to make it more readable 
      * and thus easier to test.
-     *  Also quicker to deal with ints.
+     *  Also easier to deal with ints than double precision
      */
-    int intensity = (int) (lightData[0] *= 2000);
+
+    for (int i = 0; i < 3; i++) {
+      lightData[i] *= 2000;
+    }
     for (int i = 0; i < buffer.length - 1; i++) {
       buffer[i] = buffer[i + 1];
     }
+    int intensity = (int) (lightData[0] + lightData[1] + lightData[2]);
     buffer[buffer.length - 1] = intensity;
     return average(buffer);
   }
@@ -46,15 +54,21 @@ public class lightPoller implements TimerListener {
    * Performs light polling
    * Assumes it starts facing 0 degrees in the corner block
    */
-  public void timedOut() {
+  public void run() {
     /**
      * Float Array to store RGB Raw values
      */
+
+    initalize(buffer);
+    while (true) {
       intensity = calculateIntensity();
       diff = intensity - prevIntensity;
+
+      sleepFor(SLEEP_TIME);
       prevIntensity = intensity;
 
     }
+  }
   /*
    * returns RMS of an int array
    * 
@@ -94,6 +108,7 @@ public class lightPoller implements TimerListener {
      * Resizing the actual intensity values to make it more readable and thus easier to test. Also easier to deal with
      * ints than double precision
      */
+
     for (int i = 0; i < 3; i++) {
       lightData[i] *= 2000;
     }
