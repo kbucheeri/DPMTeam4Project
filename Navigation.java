@@ -26,7 +26,8 @@ public class Navigation {
    */
   public static void travelTo(double x, double y) {
     navigationStatus = true;
-   
+    leftMotor.stop();
+    rightMotor.stop();
     double[] position = Resources.odometer.getXYT();
     /**
      * vector to move from current position to the next
@@ -92,6 +93,8 @@ public class Navigation {
    */
   public static void turnTo(double theta) {
     // take in current angle
+    leftMotor.stop();
+    rightMotor.stop();
     double currentAngle = Resources.odometer.getXYT()[2];
     double turn = theta - currentAngle;
     if (Math.abs(turn) > 180) // maximal turn

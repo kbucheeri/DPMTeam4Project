@@ -85,8 +85,8 @@ public class UltrasonicLocalizer {
     int firstEdge = 370; // initalize to impossible value for the conditions later on
     int secondEdge = 370;
     int prevData = 100;
-    leftMotor.setSpeed(120);
-    rightMotor.setSpeed(120);
+    leftMotor.setSpeed(100);
+    rightMotor.setSpeed(100);
     leftMotor.forward();
     rightMotor.backward();
     // stop when both are not 370
@@ -133,8 +133,9 @@ public class UltrasonicLocalizer {
     if (firstEdge > secondEdge)
       dtheta = 220 - ave;
     else
-      dtheta = 225 - 180 - ave;
+      dtheta = 220 - 180 - ave;
     Resources.odometer.incrementTheta(dtheta);
+    Main.sleepFor(300);
     Navigation.turnTo(0);
   }
 }
