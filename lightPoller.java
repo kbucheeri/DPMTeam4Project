@@ -5,7 +5,10 @@ import static ca.mcgill.ecse211.team4.Resources.leftMotor;
 import static ca.mcgill.ecse211.team4.Resources.odometer;
 import static ca.mcgill.ecse211.team4.Resources.rightMotor;
 import lejos.hardware.Sound;
-
+/**
+ * Samples the light sensor and applies filtering and difference calculations.
+ *
+ */
 public class lightPoller implements Runnable {
   public static int[] buffer = new int[5];
   public static int getIntensity()

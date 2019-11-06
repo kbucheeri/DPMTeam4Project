@@ -7,12 +7,17 @@ import java.io.UnsupportedEncodingException;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.robotics.RegulatedMotor;
-
+/**
+ * This class controls the launchers's motors.
+ * Used for launching and re-loading.
+ *
+ */
 public class Launcher {
   /**
-   * Launches then waits for a button press to launch again
+   * Launches for a specific distance then waits for a button press to launch again
+   * Assumes the robot is already facing the target.
    */
-  public static void launchThenWait() {
+  public static void launchThenWait(int distance) {
     launchMotor1.setAcceleration(999999);
     launchMotor2.setAcceleration(999999);
     launchMotor1.setSpeed(800);
@@ -29,7 +34,7 @@ public class Launcher {
       moveLaunchers(100);
       launchMotor1.stop();
       launchMotor2.stop();
-      Team4.sleepFor(500);
+      Main.sleepFor(500);
       resetLauncher();
       Sound.buzz();
       launchMotor1.flt();
@@ -37,7 +42,7 @@ public class Launcher {
       if (Button.waitForAnyPress(0) == Button.ID_ESCAPE)
         break;
       Sound.beepSequence();
-      Team4.sleepFor(3000);
+      Main.sleepFor(3000);
     }
     System.exit(0);
   }
@@ -59,7 +64,7 @@ public class Launcher {
     int initialSpeed = launchMotor1.getSpeed();
     launchMotor1.setSpeed(RESET_SPEED);
     launchMotor2.setSpeed(RESET_SPEED);
-    Team4.sleepFor(200);
+    Main.sleepFor(200);
     moveLaunchers(-150);
     /**
      * set it back to the launch speed.
@@ -90,7 +95,7 @@ public class Launcher {
       moveLaunchers(100);
       launchMotor1.stop();
       launchMotor2.stop();
-      Team4.sleepFor(500);
+      Main.sleepFor(500);
       resetLauncher();
       Sound.buzz();
       launchMotor1.flt();
@@ -111,7 +116,7 @@ public class Launcher {
         */
       System.out.println("speed: " + speed);
       Sound.beepSequence();
-      Team4.sleepFor(1000);
+      Main.sleepFor(1000);
     }
     System.exit(0);
   }

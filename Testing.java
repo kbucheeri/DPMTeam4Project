@@ -6,7 +6,6 @@ import static ca.mcgill.ecse211.team4.Resources.ROTATE_SPEED;
 import static ca.mcgill.ecse211.team4.Resources.TILE_SIZE;
 import static ca.mcgill.ecse211.team4.Resources.TIMEOUT_PERIOD;
 import static ca.mcgill.ecse211.team4.Resources.TRACK;
-import static ca.mcgill.ecse211.team4.Resources.US_SENSOR;
 import static ca.mcgill.ecse211.team4.Resources.WHEEL_RAD;
 import static ca.mcgill.ecse211.team4.Resources.launchMotor1;
 import static ca.mcgill.ecse211.team4.Resources.launchMotor2;
@@ -15,12 +14,16 @@ import static ca.mcgill.ecse211.team4.Resources.rightMotor;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.robotics.RegulatedMotor;
-
+/**
+ * Contains all methods related to testing
+ * @author Admin
+ *
+ */
 public class Testing {
   /**
+<<<<<<< HEAD
    * Get ultrasonic data. Press any button to get readings from the ultrasnic sensor 10 times.
    */
   public static void UltrasonicTester() {
@@ -47,11 +50,19 @@ public class Testing {
     }
     long t2 = System.nanoTime();
     System.out.println("Time to run: " + (t2 - t1) / 1000000);
+=======
+   * Prints values 10 times at 0.5 second intervals to test Ultrasonic sensor accuracy
+   */
+  public static void ultrasonicTest()
+  {
+    
+>>>>>>> 9b0408be69a1f80cf1356ffad1ccc0d7a02f2881
   }
 
   /**
-   * Test only ultrasonic in a loop. Press back to exit.
+   * Runs a function 10,000 times in a loop to measure execution time
    */
+<<<<<<< HEAD
   public static void ultrasonicLocalitzationTest() {
 
     while (true) {
@@ -64,6 +75,16 @@ public class Testing {
   }
 
   public static void trackTest() {
+=======
+  public static void codePerformanceTest() {
+    
+  }
+ /**
+  * The track test to test rotational accuracy and precision.
+  */
+  public static void trackTest()
+  {
+>>>>>>> 9b0408be69a1f80cf1356ffad1ccc0d7a02f2881
     leftMotor.stop();
     rightMotor.stop();
     launchMotor1.setAcceleration(999999);
@@ -72,12 +93,17 @@ public class Testing {
     rightMotor.setAcceleration(2000);
     leftMotor.setSpeed(300);
     rightMotor.setSpeed(300);
-    leftMotor.rotate(convertAngle(360), true);
-    rightMotor.rotate(-convertAngle(360), false);
+    leftMotor.rotate(Navigation.convertAngle(360), true);
+    rightMotor.rotate(-Navigation.convertAngle(360), false);
     leftMotor.stop();
     rightMotor.stop();
+<<<<<<< HEAD
     Team4.sleepFor(2000);
 
+=======
+    Main.sleepFor(2000);
+    
+>>>>>>> 9b0408be69a1f80cf1356ffad1ccc0d7a02f2881
     Sound.beepSequenceUp();
     // Navigation.turn(180);
     launchMotor1.setSpeed(8000);
@@ -88,6 +114,7 @@ public class Testing {
      * Resources.launchMotor2.rotate(-(70 + 5 * i), false); Resources.launchMotor1.stop();
      * Resources.launchMotor2.stop(); Lab5.sleepFor(1000); /* reset position
      */
+<<<<<<< HEAD
     launch(115);
     launchMotor1.stop();
     launchMotor2.stop();
@@ -110,6 +137,17 @@ public class Testing {
   }
 
   public static void lightSensorTest() {
+=======
+   
+  //  } */
+    System.exit(0);
+  }
+ /**
+  * The light sensor test for intensity values under different conditions
+  */
+  public static void lightSensorTest()
+  {
+>>>>>>> 9b0408be69a1f80cf1356ffad1ccc0d7a02f2881
     (new Thread() {
       public void run() {
         /**
@@ -123,7 +161,7 @@ public class Testing {
         /***
          * Sleep for 2 seconds
          */
-        Team4.sleepFor(TIMEOUT_PERIOD);
+        Main.sleepFor(TIMEOUT_PERIOD);
 
         for (int i = 0; i < 1; i++) {
           /**
@@ -131,8 +169,8 @@ public class Testing {
            */
           leftMotor.setSpeed(150);
           rightMotor.setSpeed(150);
-          leftMotor.rotate(convertAngle(400), true);
-          rightMotor.rotate(-convertAngle(400), false);
+          leftMotor.rotate(Navigation.convertAngle(400), true);
+          rightMotor.rotate(-Navigation.convertAngle(400), false);
           System.out.println("i = " + i + "\n\n\n\n\n\n");
           try {
             Thread.sleep(200);
@@ -157,6 +195,7 @@ public class Testing {
       }
     }).start();
   }
+<<<<<<< HEAD
 
   /**
    * Converts input distance to the total rotation of each wheel needed to cover that distance.
@@ -185,4 +224,7 @@ public class Testing {
   public static int convertAngle(double angle) {
     return convertDistance(Math.PI * TRACK * angle / 360.0);
   }
+=======
+  
+>>>>>>> 9b0408be69a1f80cf1356ffad1ccc0d7a02f2881
 }

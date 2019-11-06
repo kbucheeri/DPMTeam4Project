@@ -40,7 +40,7 @@ public class Resources {
   /**
    * The robot width in centimeters.
    */
-  public static final double TRACK = 10;
+  public static final double TRACK = 12.2;
   /**
    * Wall follower speed
    */
@@ -80,7 +80,7 @@ public class Resources {
   /**
    * Speed when moving launcher to initial position
    */
-  public static final int RESET_SPEED = 250;
+  public static final int RESET_SPEED = 100;
   /**
    * The tile size in centimeters.
    */

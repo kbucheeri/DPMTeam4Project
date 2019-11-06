@@ -8,11 +8,13 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
+import lejos.utility.Timer;
 
 /**
- * The main driver class for the odometry lab.
+ * The main driver class for the entire program.
+ * @version 1.00
  */
-public class Team4 {
+public class Main {
 
   /**
    * The main entry point.
@@ -20,20 +22,28 @@ public class Team4 {
    * @param args
    */
   public static void main(String[] args) {
-    new Thread(new Display()).start();
-    double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
+    //new Thread(new Display()).start();
+   // double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
     new Thread(odometer).start();
-    Testing.UltrasonicTester();
-    Launcher.launchThenWaitTest();
-    UltrasonicPoller poller = new UltrasonicPoller();
-    new Thread(poller).start();
-    Testing.codePerformanceTest(poller);
-    Sound.buzz();
+    System.out.println("max speed: " + launchMotor1.getMaxSpeed());
+    UltrasonicPoller usPoller = new UltrasonicPoller();
+    Timer usTimer = new Timer(40, usPoller);
+    usTimer.start();
+    sleepFor(800);
+    UltrasonicLocalizer.RisingEdge();
     sleepFor(500);
-    Testing.ultrasonicLocalitzationTest();
+    Sound.buzz();
+    usTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
+    System.exit(0);
     
+    
+    
+    
+    Button.waitForAnyPress();
+    // Launcher.launchThenWaitTest();
+   
     localize();
-    travelToLaunchPoint(Tx, Ty);
+   
     // didn't test turnToPoint
     // Navigation.turnToPoint(Tx, Ty);
     // Launcher.launchThenWaitTest();
@@ -61,45 +71,29 @@ public class Team4 {
   }
 
 
+  
   /**
-   * Asks the user whether rising or falling edge localization should be used
-   * 
-   * @return the user choice
-   */
-  private static int chooseType() {
-    int buttonChoice;
-    Display.showText("< Left | Right >", "   " + "    |        ", " Stationary Launch   " + "   | Mobile Launch ",
-        " <| >" + "  ", "       | ");
-
-    do {
-      buttonChoice = Button.waitForAnyPress(); // left or right press
-    } while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-    return buttonChoice;
-
-  }
-
-  /**
-   * initiates localization routines
+   * initiates localization routines (ultrasonic, light)
    */
   private static void localize() {
     System.out.println("max speed: " + launchMotor1.getMaxSpeed());
-    new Thread(new UltrasonicPoller()).start();
-    sleepFor(1000);
+    UltrasonicPoller usPoller = new UltrasonicPoller();
+    Timer usTimer = new Timer(100, usPoller);
+    sleepFor(500);
     UltrasonicLocalizer.RisingEdge();
     sleepFor(500);
     Sound.buzz();
-    // increase sleep time so the thread doesnt consume as much time
-    UltrasonicPoller.setSleepTime(2000);
-    //new Thread(new lightPoller()).start();
-    //TODO start the timer
+    usTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
+    new Thread(new lightPoller()).start();
    // Button.waitForAnyPress();
     LightLocalizer.localizeDistance();
     sleepFor(1000);
+    lightPoller.changeSleepTime(1000);
     // LightLocalizer.localizeAngle();
   }
 
   /**
-   * Travels to face launch point T
+   * Travels to the launch point on the island
    * 
    * @param Tx - centre of the square x coordinate
    * @param Ty - centre of the square y coordinate
