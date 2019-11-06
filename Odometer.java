@@ -260,7 +260,7 @@ public class Odometer implements Runnable {
   }
   /**
    *
-   * @param dtheta amount to increment Theta by. Used for localization
+   * @param dtheta amount to increment Theta. Used for localization
    */
   public void incrementTheta(double dtheta) {
     lock.lock();

@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
+import lejos.utility.Timer;
 
 /**
  * The main driver class for the entire program.
@@ -62,13 +63,13 @@ public class Main {
    */
   private static void localize() {
     System.out.println("max speed: " + launchMotor1.getMaxSpeed());
-    new Thread(new UltrasonicPoller()).start();
-    sleepFor(1000);
+    UltrasonicPoller usPoller = new UltrasonicPoller();
+    Timer usTimer = new Timer(100, usPoller);
+    sleepFor(500);
     UltrasonicLocalizer.RisingEdge();
     sleepFor(500);
     Sound.buzz();
-    // increase sleep time so the thread doesnt consume as much time
-    UltrasonicPoller.setSleepTime(2000);
+    usTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
     new Thread(new lightPoller()).start();
    // Button.waitForAnyPress();
     LightLocalizer.localizeDistance();
