@@ -21,15 +21,16 @@ public class lightPoller implements TimerListener {
    * intialize buffer array and lightTimer
    */
   public static void initialize(int rate) {
-    int sum = 0;
+    double sum = 0;
     for(int i = 0; i < 30; i++)
     {
       float[] lightData = new float[lightSensor.sampleSize()];
-      lightSensor.getRedMode().fetchSample(lightData, 0);
-      
-      sum += (lightData[0] * 512) / 30.0;
+      lightSensor.getRedMode().fetchSample(lightData, 0);     
+      sum += (lightData[0] * 2048) / 30.0;
+      Main.sleepFor(30);
     }
-    averageColor = sum;
+    averageColor = (int) sum;
+    System.out.println(averageColor);
     initializeArray(lbuffer);
     lPoller = new lightPoller();
     lightTimer = new Timer(rate, lPoller);
@@ -81,7 +82,6 @@ public class lightPoller implements TimerListener {
     // System.out.println(lintensity + ", " + lprevIntensity);
   }
 
-  public static int lprevIntensity;
   public static int lintensity;
   public static int ldiff;
   // used for correction. If line detected, its true. Used to distinguish between stops by this or navigation.
@@ -96,10 +96,9 @@ public class lightPoller implements TimerListener {
    */
   public void timedOut() {
     // if light sensing returns to 0 to prevent multiple line readings.
-    lprevIntensity = lintensity;
     // System.out.println(lintensity + ", " + lprevIntensity);
     calculateIntensity();
-    ldiff = lintensity - lprevIntensity;
+    ldiff = lintensity - averageColor;
     double angle = 0;
     // DETECTED A LINE
     if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && leftMotor.isMoving() && steadyState == true && Main.ENABLE_CORRECTION == true) {
@@ -118,14 +117,13 @@ public class lightPoller implements TimerListener {
       Sound.twoBeeps();
      //   Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
       }    
-    LCD.drawString("l: " + ldiff, 0, 5);
     if(lstoppedFlag == true)
     if(signedSquare(ldiff) > 0)
       steadyState = true;
-    /*
-     * if(t == true) System.out.println(((int) (odometer.getXYT()[1] * 100)) / 100.0 + ", " + signedSquare(ldiff) +
-     * ",  " + ldiff);
-     */
+    
+     System.out.println(((int) (odometer.getXYT()[1] * 100)) / 100.0 + ", " + signedSquare(ldiff) +
+      ",  " + ldiff);
+     
     }
   
 
@@ -163,8 +161,7 @@ public class lightPoller implements TimerListener {
       buffer[i] = init;
     }
 
-    lprevIntensity = lintensity;
-    ldiff = 5;
+    ldiff = 0;
   }
 
   /**

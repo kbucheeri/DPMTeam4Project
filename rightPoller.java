@@ -73,7 +73,6 @@ public class rightPoller implements TimerListener {
     // System.out.println(lintensity + ", " + lprevIntensity);
   }
 
-  public static int lprevIntensity;
   public static int lintensity;
   public static int ldiff;
   // used for correction. If line detected, its true. Used to distinguish between stops by this or navigation.
@@ -88,10 +87,9 @@ public class rightPoller implements TimerListener {
    */
   public void timedOut() {
     // if light sensing returns to 0 to prevent multiple line readings.
-    lprevIntensity = lintensity;
     // System.out.println(lintensity + ", " + lprevIntensity);
     calculateIntensity();
-    ldiff = lintensity - lprevIntensity;
+    ldiff = lintensity - averageColor;
     double angle = 0;
     // DETECTED A LINE
     if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && rightMotor.isMoving() 
@@ -156,9 +154,7 @@ public class rightPoller implements TimerListener {
     for (int i = 0; i < buffer.length; i++) {
       buffer[i] = init;
     }
-
-    lprevIntensity = lintensity;
-    ldiff = 5;
+    ldiff = 0;
   }
 
   /**
