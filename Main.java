@@ -36,8 +36,10 @@ public class Main {
     usTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
     System.exit(0);
     */
-    lightPoller.initialize(80);
+    lightPoller.initialize(80); 
+    rightPoller.initialize(80);
     lightPoller.begin();
+    rightPoller.begin();
     sleepFor(3000);
     Navigation.travelTo(0, TILE_SIZE * 5);
     while(true)

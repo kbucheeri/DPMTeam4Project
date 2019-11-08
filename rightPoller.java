@@ -10,10 +10,10 @@ import lejos.utility.TimerListener;
  * Samples the light sensor and applies filtering and difference calculations.
  *
  */
-public class lightPoller implements TimerListener {
+public class rightPoller implements TimerListener {
 
   private static Timer lightTimer;
-  private static lightPoller lPoller;
+  private static rightPoller lPoller;
   public static int[] lbuffer = new int[3];
 
   /**
@@ -21,7 +21,7 @@ public class lightPoller implements TimerListener {
    */
   public static void initialize(int rate) {
     initializeArray(lbuffer);
-    lPoller = new lightPoller();
+    lPoller = new rightPoller();
     lightTimer = new Timer(rate, lPoller);
   }
 
@@ -59,8 +59,8 @@ public class lightPoller implements TimerListener {
    * @return The average of the previous light sensor intensity values.
    */
   public static void calculateIntensity() {
-    float[] lightData = new float[lightSensor.sampleSize()];
-    lightSensor.getRedMode().fetchSample(lightData, 0);
+    float[] lightData = new float[rightSensor.sampleSize()];
+    rightSensor.getRedMode().fetchSample(lightData, 0);
     /**
      * Resizing the actual intensity values to make it more readable and thus easier to test. Also easier to deal with
      * ints than double precision
@@ -92,17 +92,17 @@ public class lightPoller implements TimerListener {
     ldiff = lintensity - lprevIntensity;
     double angle = 0;
     // DETECTED A LINE
-    if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && leftMotor.isMoving() && steadyState == true) {
+    if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && rightMotor.isMoving() && steadyState == true) {
       steadyState= false;
       /**
        * slow down other motor if this is 1st line detected
        */
-      if(rightMotor.isMoving() == true)
+      if(leftMotor.isMoving() == true)
         {
           angle = odometer.getXYT()[2];
-          rightMotor.setSpeed(80);
+          leftMotor.setSpeed(80);
         }
-      leftMotor.stop();
+      rightMotor.stop();
       OdometryCorrection.correctParallel(angle);
       lstoppedFlag = true;
       Sound.twoBeeps();
@@ -144,8 +144,8 @@ public class lightPoller implements TimerListener {
    */
   public static void initializeArray(int[] buffer) {
 
-    float[] lightData = new float[lightSensor.sampleSize()];
-    lightSensor.getRedMode().fetchSample(lightData, 0);
+    float[] lightData = new float[rightSensor.sampleSize()];
+    rightSensor.getRedMode().fetchSample(lightData, 0);
     /**
      * Resizing the actual intensity values to make it more readable and thus easier to test. Also easier to deal with
      * ints than double precision

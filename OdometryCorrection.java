@@ -32,7 +32,8 @@ public class OdometryCorrection {
    */
   public static void correctParallel(double angle)
   {
-	  correctingStatus = true;
+    if(correctingStatus == true) //called once before
+    {
     double[] currentPosition = odometer.getXYT();
     if(currentPosition[2] < 15 || currentPosition[2] > 340 || (currentPosition[2] < 200 && currentPosition[2] > 160)) //travelling vertically
       odometer.setY(determineNearestLine(currentPosition[1]));
@@ -40,6 +41,9 @@ public class OdometryCorrection {
       odometer.setX(determineNearestLine(currentPosition[0]));
     odometer.setTheta(determineAngle(angle));
     correctingStatus = false;
+    }
+    else
+      startCorrecting();
   }
   
   /**
