@@ -32,7 +32,7 @@ public class Resources {
   /**
    * Derivative threshold for detecting lines.
    */
-  public static final int LIGHT_DIFF_THRESHOLD = -500;
+  public static final int LIGHT_DIFF_THRESHOLD = -50;
   /**
    * distance to back up after detecting a line
    */
@@ -44,7 +44,7 @@ public class Resources {
   /**
    * Threshold for detection of an edge (for localization)
    */
-  public static final int EDGE_THRESHOLD = 35;
+  public static final int EDGE_THRESHOLD = 30;
   /**
    * The wheel radius in centimeters.
    */
@@ -93,7 +93,7 @@ public class Resources {
   /**
    * Speed when moving launcher to initial position
    */
-  public static final int RESET_SPEED = 100;
+  public static final int RESET_SPEED = 20;
 
   /**
    * The left motor.

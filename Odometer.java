@@ -73,7 +73,7 @@ public class Odometer implements Runnable {
    * cannot be accessed externally.
    */
   private Odometer() {
-    setXYT(0, 0, 0);
+    setXYT(STARTING_X - 10, STARTING_Y - 10, 0);
   }
 
   /**

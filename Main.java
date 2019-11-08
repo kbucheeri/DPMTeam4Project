@@ -27,21 +27,25 @@ public class Main {
     new Thread(new Display()).start();
     new Thread(odometer).start();
     //System.out.println("max speed: " + launchMotor1.getMaxSpeed());
-  //  UltrasonicPoller usPoller = new UltrasonicPoller();
-   // Timer usTimer = new Timer(150, usPoller);
-    lightPoller.initialize(200); 
-    rightPoller.initialize(200);
-/*    usTimer.start();
+    UltrasonicPoller usPoller = new UltrasonicPoller();
+    Timer usTimer = new Timer(200, usPoller);
+    lightPoller.initialize(150); 
+    rightPoller.initialize(150);
+    usTimer.start();
     sleepFor(1000);
     UltrasonicLocalizer.RisingEdge();
     sleepFor(500); 
     Sound.buzz();
-    usTimer.setDelay(2000);     // increase sleep time to decrease processing requirement*/
+    usTimer.setDelay(5000);     // increase sleep time to decrease processing requirement*/
     lightPoller.begin();
     rightPoller.begin();
-    Main.ENABLE_CORRECTION = false;
+    Main.ENABLE_CORRECTION = true;
+    LightLocalizer.localizeDistance();
+    Button.waitForAnyPress();  
+    Launcher.launchThenWaitTest();
+    System.exit(0);
     Navigation.travelTo(0, TILE_SIZE * 5);
-    Button.waitForAnyPress();   
+
     System.exit(0);
     while(true)
     {

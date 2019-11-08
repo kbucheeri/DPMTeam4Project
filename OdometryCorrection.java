@@ -10,7 +10,7 @@ public class OdometryCorrection {
   public static void startCorrecting() {
     correctingStatus = true;
   }
-
+  private static double initial_angle;
   private static boolean correctingStatus = false;
 
   /**
@@ -58,10 +58,17 @@ public class OdometryCorrection {
         }
         odometer.setX(determineNearestLine(currentPosition[0]));      
         }
-      odometer.setTheta(determineAngle(angle));
+      
+      
+      
+      if(Math.abs(initial_angle - currentPosition[2]) < 45) //Too much correction. Probably a fault
+        odometer.setTheta(determineAngle(angle));
       correctingStatus = false;
     } else
+    {
       startCorrecting();
+      initial_angle = angle;
+    }
   }
 
   /**

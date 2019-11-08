@@ -11,7 +11,11 @@ import lejos.utility.TimerListener;
  *
  */
 public class lightPoller implements TimerListener {
-
+  public static int lintensity;
+  public static int ldiff;
+  // used for correction. If line detected, its true. Used to distinguish between stops by this or navigation.
+  private static boolean lstoppedFlag = false;
+  static boolean steadyState = true;
   private static Timer lightTimer;
   private static lightPoller lPoller;
   public static int[] lbuffer = new int[3];
@@ -22,16 +26,15 @@ public class lightPoller implements TimerListener {
    */
   public static void initialize(int rate) {
     double sum = 0;
-    for(int i = 0; i < 30; i++)
-    {
+    for (int i = 0; i < 30; i++) {
       float[] lightData = new float[lightSensor.sampleSize()];
-      lightSensor.getRedMode().fetchSample(lightData, 0);     
-      sum += (lightData[0] * 2048) / 30.0;
+      lightSensor.getRedMode().fetchSample(lightData, 0);
+      sum += (lightData[0] * 1024) / 30.0;
       Main.sleepFor(30);
     }
     averageColor = (int) sum;
+    lintensity = averageColor;
     System.out.println(averageColor);
-    initializeArray(lbuffer);
     lPoller = new lightPoller();
     lightTimer = new Timer(rate, lPoller);
   }
@@ -61,8 +64,6 @@ public class lightPoller implements TimerListener {
     return ldiff;
   }
 
-  public static int average = 0;
-
   /**
    * calculates the intensity from the light sensor and applies rudimentary filtering In the form of the arithmetic
    * mean.
@@ -76,17 +77,11 @@ public class lightPoller implements TimerListener {
      * Resizing the actual intensity values to make it more readable and thus easier to test. Also easier to deal with
      * ints than double precision
      */
-    lintensity = (int) (lightData[0] * 2048);
-    shiftBuffer(lintensity, lbuffer);
-    lintensity = average(lbuffer);
+    lintensity = (int) (lightData[0] * 1024);
     // System.out.println(lintensity + ", " + lprevIntensity);
   }
 
-  public static int lintensity;
-  public static int ldiff;
-  // used for correction. If line detected, its true. Used to distinguish between stops by this or navigation.
-  private static boolean lstoppedFlag = false;
-  static boolean steadyState = true;
+
   public static int signedSquare(int num) {
     return (int) (num * num * Math.signum(num));
   }
@@ -101,31 +96,29 @@ public class lightPoller implements TimerListener {
     ldiff = lintensity - averageColor;
     double angle = 0;
     // DETECTED A LINE
-    if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && leftMotor.isMoving() && steadyState == true && Main.ENABLE_CORRECTION == true) {
-      steadyState= false;
+    if (ldiff < LIGHT_DIFF_THRESHOLD && leftMotor.isMoving() && steadyState == true
+        && Main.ENABLE_CORRECTION == true) {
+      steadyState = false;
       /**
        * slow down other motor if this is 1st line detected
        */
-      if(rightMotor.isMoving() == true)
-        {
-          angle = odometer.getXYT()[2];
-          rightMotor.setSpeed(120);
-        }
+      if (rightMotor.isMoving() == true) {
+        angle = odometer.getXYT()[2];
+        rightMotor.setSpeed(120);
+      }
       leftMotor.stop();
       OdometryCorrection.correctParallel(angle);
       lstoppedFlag = true;
       Sound.twoBeeps();
-     //   Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
-      }    
-    if(lstoppedFlag == true)
-    if(signedSquare(ldiff) > 0)
-      steadyState = true;
-    
-     System.out.println(((int) (odometer.getXYT()[1] * 100)) / 100.0 + ", " + signedSquare(ldiff) +
-      ",  " + ldiff);
-     
+      // Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.
     }
-  
+      if (ldiff > -10)
+        steadyState = true;
+
+   // System.out.println(((int) (odometer.getXYT()[1] * 100)) / 100.0 + ", " + signedSquare(ldiff) + ",  " + ldiff);
+
+  }
+
 
   /*
    * returns RMS of an int array
@@ -141,27 +134,6 @@ public class lightPoller implements TimerListener {
     for (int i = 0; i < arr.length; i++)
       sum = sum + arr[i];
     return sum / arr.length;
-  }
-
-  /**
-   * initalizes the buffer array
-   * 
-   * @param buffer array to initalize
-   */
-  public static void initializeArray(int[] buffer) {
-    float[] lightData = new float[lightSensor.sampleSize()];
-    lightSensor.getRedMode().fetchSample(lightData, 0);
-    /**
-     * Resizing the actual intensity values to make it more readable and thus easier to test. Also easier to deal with
-     * ints than double precision
-     */
-
-    int init = (int) (lightData[0] * 512);
-    for (int i = 0; i < buffer.length; i++) {
-      buffer[i] = init;
-    }
-
-    ldiff = 0;
   }
 
   /**

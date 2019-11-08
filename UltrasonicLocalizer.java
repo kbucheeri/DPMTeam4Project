@@ -125,15 +125,17 @@ public class UltrasonicLocalizer {
       prevData = data;
 
     }
+    leftMotor.stop();
+    rightMotor.stop();
     // slow down ultrasonic polling because its no longer necessary; occupy less processor time.
     // get average of both data
     int ave = (firstEdge + secondEdge) / 2;
     double dtheta;
     // detects left wall first
     if (firstEdge > secondEdge)
-      dtheta = 225 - ave;
+      dtheta = 220 - ave;
     else
-      dtheta = 225 - 180 - ave;
+      dtheta = 220 - 180 - ave;
     Resources.odometer.incrementTheta(dtheta);
     Main.sleepFor(300);
     Navigation.turnTo(0);

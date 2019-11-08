@@ -26,7 +26,7 @@ public class LightLocalizer {
     rightMotor.setSpeed(100);
     Navigation.turnTo(0);
     Main.ENABLE_CORRECTION = true;
-    Main.travelTo(STARTING_X, STARTING_Y + 20);
+    Navigation.travelTo(STARTING_X, STARTING_Y + 10);
  //   Main.ENABLE_CORRECTION = false;
     leftMotor.setSpeed(100);
     rightMotor.setSpeed(100);
@@ -37,12 +37,14 @@ public class LightLocalizer {
     sleepFor(200);  
     Navigation.turnTo(90);
     sleepFor(100);
-    Navigation.travelTo(odometer.getXYT()[0] + 20, odometer.getXYT()[1]);
+    Main.travelTo(odometer.getXYT()[0] + 20, odometer.getXYT()[1]);
     sleepFor(100);
-    Main.travelTo(STARTING_X, STARTING_Y);
+    Main.ENABLE_CORRECTION = false;
+    Navigation.travelToParallel(STARTING_X, STARTING_Y);
     sleepFor(100);
     Navigation.turnTo(0);
     sleepFor(200);
+    Main.ENABLE_CORRECTION = true;
     Sound.twoBeeps();
     LOCALIZING = false;
   }
