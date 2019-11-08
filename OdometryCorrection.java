@@ -5,6 +5,10 @@ import lejos.hardware.Sound;
 import lejos.utility.Timer;
 import lejos.utility.TimerListener;
 public class OdometryCorrection {
+  public static void startCorrecting()
+  {
+    correctingStatus = true;
+  }
 	private static boolean correctingStatus = false;
   /**
    * returns nearest line distance from origin (i.e if at 59, nearest line is at 30.48 * 2)
@@ -26,7 +30,7 @@ public class OdometryCorrection {
   /**
    * Correct odometry if travelling parallel to coordinate axes
    */
-  public static void correctParallel()
+  public static void correctParallel(double angle)
   {
 	  correctingStatus = true;
     double[] currentPosition = odometer.getXYT();
@@ -34,7 +38,7 @@ public class OdometryCorrection {
       odometer.setY(determineNearestLine(currentPosition[1]));
     else //travelling horizontally
       odometer.setX(determineNearestLine(currentPosition[0]));
-    odometer.setTheta(determineAngle(currentPosition[2]));
+    odometer.setTheta(determineAngle(angle));
     correctingStatus = false;
   }
   

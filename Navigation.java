@@ -60,7 +60,6 @@ public class Navigation {
         break;
     }
 */
-    Sound.twoBeeps();
     navigationStatus = false; // only sets it to false after travel function terminates
     // System.out.println("ended navigation!");
   }

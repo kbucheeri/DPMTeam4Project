@@ -14,8 +14,8 @@ public class lightPoller implements TimerListener {
 
   private static Timer lightTimer;
   private static lightPoller lPoller;
-  public static int[] lbuffer = new int[5];
-  public static int[] rbuffer = new int[5];
+  public static int[] lbuffer = new int[6];
+  public static int[] rbuffer = new int[6];
 
   /**
    * intialize buffer array and lightTimer
@@ -84,9 +84,11 @@ public class lightPoller implements TimerListener {
   public static int rintensity;
   public static int ldiff;
   public static int rdiff;
-  // used for correction. If line detected, its correct.
+  // used for correction. If line detected, its true. Used to distinguish between stops by this or navigation.
   private static boolean lstoppedFlag = false;
-
+  private static boolean rstoppedFlag = false;
+  static boolean lsteadyState = true;
+  static boolean rsteadyState = true;
   public static int signedSquare(int num) {
     return (int) (num * num * Math.signum(num));
   }
@@ -99,51 +101,60 @@ public class lightPoller implements TimerListener {
     lprevIntensity = lintensity;
     rprevIntensity = rintensity;
     // System.out.println(lintensity + ", " + lprevIntensity);
-    boolean steadyState = true;
     calculateIntensity();
     ldiff = lintensity - lprevIntensity;
     rdiff = rintensity - rprevIntensity;
+    double angle = 0;
     // DETECTED A LINE
-    if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && leftMotor.isMoving()) {
-      leftMotor.stop();
-    //  steadyState = false;
-      if (rightMotor.isMoving()) {      
-
-        lightPoller.changeRate(LIGHT_RATE / 2);// increase the polling rate
-      } 
-      /*
-       * Stopped flag is true which means that the right motor 
-       * had stopped before and the left motor is currently rotating
-       */
-      else {       
-        System.out.println("Entered lhere");
-
-        lightPoller.changeRate(LIGHT_RATE); //reset polling rate
+    if(signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && signedSquare(rdiff) < LIGHT_DIFF_THRESHOLD) {
       
-        OdometryCorrection.correctParallel();
-     //   Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
-      }
-    }    
-    
-    if(signedSquare(rdiff) < LIGHT_DIFF_THRESHOLD  && rightMotor.isMoving()) {
-      Sound.buzz();
-      rightMotor.stop();
-      Sound.buzz();
-      if (leftMotor.isMoving()) {      
-
-        lightPoller.changeRate(LIGHT_RATE / 2);// increase the polling rate
-      } else {
-        System.out.println("Entered rhere");
-        lightPoller.changeRate(LIGHT_RATE); //reset polling rate
-        OdometryCorrection.correctParallel();
-    //    Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
-      }
     }
+    else {
+    if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && leftMotor.isMoving() && lsteadyState == true) {
+      lsteadyState= false;
+      if(rightMotor.isMoving() == true)
+        {
+          angle = odometer.getXYT()[2];
+          rightMotor.setSpeed(80);
+        }
+      leftMotor.stop();
+      OdometryCorrection.startCorrecting();
+      lstoppedFlag = true;
+      Sound.twoBeeps();
+     //   Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
+      }    
+    
+    if(signedSquare(rdiff) < LIGHT_DIFF_THRESHOLD  && rightMotor.isMoving() && rsteadyState == true) {
+      rsteadyState = false;
+      if(leftMotor.isMoving() == true)
+      {
+        angle = odometer.getXYT()[2];
+        leftMotor.setSpeed(80);
+      }
+      rightMotor.stop();
+      OdometryCorrection.startCorrecting();
+      rstoppedFlag = true;
+      Sound.buzz();
+      
+    }
+    LCD.drawString("l: " + ldiff, 0, 5);
+    if(lstoppedFlag == true && rstoppedFlag == true)
+    {
+      lstoppedFlag = false;
+      rstoppedFlag = false;
+     OdometryCorrection.correctParallel(angle);
+    }
+    System.out.print(odometer.getXYT()[1]);
+    System.out.println(", " + ldiff);
+    if(signedSquare(ldiff) > 0)
+      lsteadyState = true;
+    if(signedSquare(rdiff) > 0)
+      rsteadyState = true;
     /*
      * if(t == true) System.out.println(((int) (odometer.getXYT()[1] * 100)) / 100.0 + ", " + signedSquare(ldiff) +
      * ",  " + ldiff);
      */
-
+    }
   }
 
   /*
