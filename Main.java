@@ -22,7 +22,7 @@ public class Main {
    * @param args
    */
   public static void main(String[] args) {
-    //new Thread(new Display()).start();
+    new Thread(new Display()).start();
    // double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
     new Thread(odometer).start();
     System.out.println("max speed: " + launchMotor1.getMaxSpeed());
@@ -36,16 +36,23 @@ public class Main {
     usTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
     System.exit(0);
     */
-    lightPoller lPoller = new lightPoller();
-    Timer lightTimer = new Timer(100, lPoller);
-    lightTimer.start();
+    lightPoller.initialize(LIGHT_RATE);
+    lightPoller.begin();
     sleepFor(1000);
-    lightPoller.t = true;
     Navigation.travelTo(0, TILE_SIZE * 5);
+    while(true)
+    {
+      if(Math.abs(odometer.getXYT()[1] - TILE_SIZE * 5) < 1) 
+      {
+        break;
+      }
+      sleepFor(1000);
+    }
     sleepFor(500); 
-    Sound.buzz();
-    lightTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
-    System.exit(0);
+  //  Sound.buzz();
+    lightPoller.changeRate(150);     // increase sleep time to decrease processing requirement
+    Button.waitForAnyPress();
+      System.exit(0);
     
     
     Button.waitForAnyPress();
@@ -169,5 +176,4 @@ public class Main {
       // There is nothing to be done here
     }
   }
-
 }

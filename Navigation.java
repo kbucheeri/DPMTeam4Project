@@ -9,6 +9,7 @@ import lejos.hardware.Sound;
  * @author Khaled Bucheeri
  *
  */
+
 public class Navigation {
   private static boolean navigationStatus = false;
 
@@ -18,7 +19,8 @@ public class Navigation {
     leftMotor.setAcceleration(ACCELERATION);
     rightMotor.setAcceleration(ACCELERATION);
   }
-
+  public static double currentXdest;
+  public static double currentYdest;
   /**
    * 
    * @param x absolute position of the coordinate to travel to.
@@ -26,6 +28,8 @@ public class Navigation {
    */
   public static void travelTo(double x, double y) {
     navigationStatus = true;
+    currentXdest = x;
+    currentYdest = y;
     leftMotor.stop();
     rightMotor.stop();
     double[] position = Resources.odometer.getXYT();
@@ -81,6 +85,8 @@ public class Navigation {
    * @param theta relative angle to turn to
    */
   public static void turn(double theta) {
+    leftMotor.stop();
+    rightMotor.stop();
     leftMotor.setSpeed(ROTATE_SPEED);
     rightMotor.setSpeed(ROTATE_SPEED);
     leftMotor.rotate(convertAngle(theta), true);

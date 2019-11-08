@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
 public class Display implements Runnable {
 
   private double[] position;
-  private final long DISPLAY_PERIOD = 505;
+  private final long DISPLAY_PERIOD = 50;
   private long timeout = Long.MAX_VALUE;
 
   public void run() {

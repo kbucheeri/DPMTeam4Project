@@ -17,9 +17,13 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
  */
 public class Resources {
   /**
+   * polling rate for the light sensors
+   */
+  public static int LIGHT_RATE = 100;
+  /**
    * Derivative threshold for detecting lines.
    */
-  public static final int LIGHT_DIFF_THRESHOLD = -55;
+  public static final int LIGHT_DIFF_THRESHOLD = -500;
   /**
    * distance to back up after detecting a line
    */
@@ -35,7 +39,7 @@ public class Resources {
   /**
    * The wheel radius in centimeters.
    */
-  public static final double WHEEL_RAD = 2.130;
+  public static final double WHEEL_RAD = 2.05;
 
   /**
    * The robot width in centimeters.
@@ -48,7 +52,7 @@ public class Resources {
   /**
    * The speed at which the robot moves forward in degrees per second.
    */
-  public static final int FORWARD_SPEED = 150; // slowed it down to give motor to increase correction
+  public static final int FORWARD_SPEED = 125; // slowed it down to give motor to increase correction
 
   /**
    * The speed at which the robot rotates in degrees per second.
