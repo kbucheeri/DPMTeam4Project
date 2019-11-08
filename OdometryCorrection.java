@@ -5,27 +5,44 @@ import lejos.hardware.Sound;
 import lejos.utility.Timer;
 import lejos.utility.TimerListener;
 public class OdometryCorrection {
-
+	private static boolean correctingStatus = false;
   /**
-   * returns true if X, Y otherwise
+   * returns nearest line distance from origin (i.e if at 59, nearest line is at 30.48 * 2)
    * @param X
-   * @param Y
-   * @return
    */
-  private static int determineNearestLine(int X)
+  public static double determineNearestLine(double X)
   {
-    return Math.round(X / 3048);
+    return 30.48 * Math.round(X / 30.48);
+  }
+  /**
+   * determines nearest angle of the 4 cardinal directions (multiples of 90)
+   * @param theta
+   * @return nearest angle
+   */
+  public static int determineAngle(double theta)
+  {
+	  return (int) Math.round(theta / 90);
   }
   /**
    * Correct odometry if travelling parallel to coordinate axes
    */
   public static void correctParallel()
   {
-    double[] currentPos = odometer.getXYT();
-    if(currentPos[2] < 15 || currentPos[2] > 340 || (currentPos[2] < 200 && currentPos[2] > 160)) //travelling vertically
-      odometer.setY(30.48 * determineNearestLine((int) currentPos[1]));
-    else
-      odometer.setX(30.48 * determineNearestLine((int) currentPos[0]));
-    
+	  correctingStatus = true;
+    double[] currentPosition = odometer.getXYT();
+    if(currentPosition[2] < 15 || currentPosition[2] > 340 || (currentPosition[2] < 200 && currentPosition[2] > 160)) //travelling vertically
+      odometer.setY(determineNearestLine(currentPosition[1]));
+    else //travelling horizontally
+      odometer.setX(determineNearestLine(currentPosition[0]));
+    odometer.setTheta(determineAngle(currentPosition[2]));
+    correctingStatus = false;
+  }
+  
+  /**
+   * Used for navigation (only issues another motor command when it finishes correcting)
+   */
+  public static boolean isCorrecting()
+  {
+	  return correctingStatus;
   }
 }

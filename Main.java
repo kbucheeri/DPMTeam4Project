@@ -42,11 +42,16 @@ public class Main {
     Navigation.travelTo(0, TILE_SIZE * 5);
     while(true)
     {
-      if(Math.abs(odometer.getXYT()[1] - TILE_SIZE * 5) < 1) 
+      if(Navigation.isNavigating() == false) //done navigating
       {
-        break;
+    	  if(Math.abs(odometer.getXYT()[1] - TILE_SIZE * 5) < 1) //close to the target
+    		  	break;
+    	  else if(OdometryCorrection.isCorrecting() == false)
+    		  Navigation.travelTo(0, TILE_SIZE * 5);
+    		  
       }
-      sleepFor(1000);
+      //currently navigating
+      sleepFor(300);
     }
     sleepFor(500); 
   //  Sound.buzz();

@@ -116,12 +116,12 @@ public class lightPoller implements TimerListener {
        * had stopped before and the left motor is currently rotating
        */
       else {       
-        System.out.println("Entered here");
- 
+        System.out.println("Entered lhere");
+
         lightPoller.changeRate(LIGHT_RATE); //reset polling rate
       
         OdometryCorrection.correctParallel();
-        Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
+     //   Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
       }
     }    
     
@@ -133,10 +133,10 @@ public class lightPoller implements TimerListener {
 
         lightPoller.changeRate(LIGHT_RATE / 2);// increase the polling rate
       } else {
-        System.out.println("Entered here");
+        System.out.println("Entered rhere");
         lightPoller.changeRate(LIGHT_RATE); //reset polling rate
         OdometryCorrection.correctParallel();
-        Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
+    //    Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
       }
     }
     /*
