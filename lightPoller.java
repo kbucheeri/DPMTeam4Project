@@ -15,11 +15,21 @@ public class lightPoller implements TimerListener {
   private static Timer lightTimer;
   private static lightPoller lPoller;
   public static int[] lbuffer = new int[3];
+  public static int averageColor;
 
   /**
    * intialize buffer array and lightTimer
    */
   public static void initialize(int rate) {
+    int sum = 0;
+    for(int i = 0; i < 30; i++)
+    {
+      float[] lightData = new float[lightSensor.sampleSize()];
+      lightSensor.getRedMode().fetchSample(lightData, 0);
+      
+      sum += (lightData[0] * 512) / 30.0;
+    }
+    averageColor = sum;
     initializeArray(lbuffer);
     lPoller = new lightPoller();
     lightTimer = new Timer(rate, lPoller);
@@ -92,7 +102,7 @@ public class lightPoller implements TimerListener {
     ldiff = lintensity - lprevIntensity;
     double angle = 0;
     // DETECTED A LINE
-    if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && leftMotor.isMoving() && steadyState == true) {
+    if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && leftMotor.isMoving() && steadyState == true && Main.ENABLE_CORRECTION == true) {
       steadyState= false;
       /**
        * slow down other motor if this is 1st line detected
@@ -100,7 +110,7 @@ public class lightPoller implements TimerListener {
       if(rightMotor.isMoving() == true)
         {
           angle = odometer.getXYT()[2];
-          rightMotor.setSpeed(80);
+          rightMotor.setSpeed(120);
         }
       leftMotor.stop();
       OdometryCorrection.correctParallel(angle);
@@ -110,8 +120,6 @@ public class lightPoller implements TimerListener {
       }    
     LCD.drawString("l: " + ldiff, 0, 5);
     if(lstoppedFlag == true)
-    System.out.print(odometer.getXYT()[1]);
-    System.out.println(", " + ldiff);
     if(signedSquare(ldiff) > 0)
       steadyState = true;
     /*
@@ -143,7 +151,6 @@ public class lightPoller implements TimerListener {
    * @param buffer array to initalize
    */
   public static void initializeArray(int[] buffer) {
-
     float[] lightData = new float[lightSensor.sampleSize()];
     lightSensor.getRedMode().fetchSample(lightData, 0);
     /**

@@ -17,6 +17,15 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
  */
 public class Resources {
   /**
+   * The tile size in centimeters.
+   */
+  public static final double TILE_SIZE = 30.48;
+/**
+ * The coordinates of the nearest starting grid intersection
+ */
+  public static double STARTING_X = 0 * TILE_SIZE;
+  public static double STARTING_Y = 0 * TILE_SIZE;
+  /**
    * polling rate for the light sensors
    */
   public static int LIGHT_RATE = 100;
@@ -35,7 +44,7 @@ public class Resources {
   /**
    * Threshold for detection of an edge (for localization)
    */
-  public static final int EDGE_THRESHOLD = 30;
+  public static final int EDGE_THRESHOLD = 35;
   /**
    * The wheel radius in centimeters.
    */
@@ -85,10 +94,6 @@ public class Resources {
    * Speed when moving launcher to initial position
    */
   public static final int RESET_SPEED = 100;
-  /**
-   * The tile size in centimeters.
-   */
-  public static final double TILE_SIZE = 30.48;
 
   /**
    * The left motor.

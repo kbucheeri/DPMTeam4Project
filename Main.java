@@ -15,6 +15,7 @@ import lejos.utility.Timer;
  * @version 1.00
  */
 public class Main {
+  public static boolean ENABLE_CORRECTION = true;
 
   /**
    * The main entry point.
@@ -22,26 +23,26 @@ public class Main {
    * @param args
    */
   public static void main(String[] args) {
-    new Thread(new Display()).start();
    // double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
+    new Thread(new Display()).start();
     new Thread(odometer).start();
-    System.out.println("max speed: " + launchMotor1.getMaxSpeed());
-  /*  UltrasonicPoller usPoller = new UltrasonicPoller();
-    Timer usTimer = new Timer(100, usPoller);
+    //System.out.println("max speed: " + launchMotor1.getMaxSpeed());
+    UltrasonicPoller usPoller = new UltrasonicPoller();
+    Timer usTimer = new Timer(150, usPoller);
+    lightPoller.initialize(150); 
+    rightPoller.initialize(150);
     usTimer.start();
     sleepFor(1000);
     UltrasonicLocalizer.RisingEdge();
     sleepFor(500); 
     Sound.buzz();
-    usTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
-    System.exit(0);
-    */
-    lightPoller.initialize(80); 
-    rightPoller.initialize(80);
+    usTimer.setDelay(2000);     // increase sleep time to decrease processing requirement
     lightPoller.begin();
     rightPoller.begin();
-    sleepFor(3000);
-    Navigation.travelTo(0, TILE_SIZE * 5);
+    Sound.buzz();
+    LightLocalizer.localizeDistance();
+    sleepFor(500);
+    Button.waitForAnyPress();   
     while(true)
     {
       if(Navigation.isNavigating() == false) //done navigating
@@ -55,7 +56,22 @@ public class Main {
       //currently navigating
       sleepFor(800);
     }
+    Sound.beepSequenceUp();
     sleepFor(500); 
+    while(true)
+    {
+      if(Navigation.isNavigating() == false) //done navigating
+      {
+          if(Math.abs(odometer.getXYT()[0] - TILE_SIZE * 3) < 1) //close to the target
+                break;
+          else if(OdometryCorrection.isCorrecting() == false)
+              Navigation.travelTo(TILE_SIZE * 3, 0);
+              
+      }
+      //currently navigating
+      sleepFor(800);
+    }
+    sleepFor(500);
   //  Sound.buzz();
     lightPoller.changeRate(150);     // increase sleep time to decrease processing requirement
     Button.waitForAnyPress();
@@ -182,5 +198,25 @@ public class Main {
     } catch (InterruptedException e) {
       // There is nothing to be done here
     }
+  }
+  /**
+   * includes a loop, just in case
+   */
+  public static void travelTo(double x, double y)
+  {
+    while(true)
+    {
+      if(Navigation.isNavigating() == false) //done navigating
+      {
+          if(Math.hypot(odometer.getXYT()[0] - x, odometer.getXYT()[1] - y) < 1) //close to the target
+                break;
+          else if(OdometryCorrection.isCorrecting() == false)
+              Navigation.travelTo(x, y);
+              
+      }
+      //currently navigating
+      sleepFor(800);
+    }
+    
   }
 }

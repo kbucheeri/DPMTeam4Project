@@ -85,12 +85,17 @@ public class Navigation {
    * @param theta relative angle to turn to
    */
   public static void turn(double theta) {
+    boolean enable_status = Main.ENABLE_CORRECTION; //store correction status then revert at the end
+    Main.ENABLE_CORRECTION = false; //dont want correction when rotating in place
     leftMotor.stop();
     rightMotor.stop();
     leftMotor.setSpeed(ROTATE_SPEED);
     rightMotor.setSpeed(ROTATE_SPEED);
     leftMotor.rotate(convertAngle(theta), true);
     rightMotor.rotate(-convertAngle(theta), false);
+    
+    
+    Main.ENABLE_CORRECTION = enable_status;
   }
 
   /**
@@ -98,6 +103,8 @@ public class Navigation {
    * @param theta angle to turn to in absolute units
    */
   public static void turnTo(double theta) {
+    boolean enable_status = Main.ENABLE_CORRECTION; //store correction status then revert at the end
+    Main.ENABLE_CORRECTION = false; //dont want correction when rotating in place
     // take in current angle
     leftMotor.stop();
     rightMotor.stop();
@@ -117,6 +124,8 @@ public class Navigation {
     rightMotor.forward();
     leftMotor.rotate(convertAngle(turn), true);
     rightMotor.rotate(-convertAngle(turn), false);
+    
+    Main.ENABLE_CORRECTION = enable_status;
   }
 
   /**

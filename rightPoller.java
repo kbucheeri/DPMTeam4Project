@@ -15,6 +15,7 @@ public class rightPoller implements TimerListener {
   private static Timer lightTimer;
   private static rightPoller lPoller;
   public static int[] lbuffer = new int[3];
+  public static int averageColor;
 
   /**
    * intialize buffer array and lightTimer
@@ -23,6 +24,7 @@ public class rightPoller implements TimerListener {
     initializeArray(lbuffer);
     lPoller = new rightPoller();
     lightTimer = new Timer(rate, lPoller);
+    averageColor = lightPoller.averageColor;
   }
 
   /**
@@ -92,7 +94,8 @@ public class rightPoller implements TimerListener {
     ldiff = lintensity - lprevIntensity;
     double angle = 0;
     // DETECTED A LINE
-    if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && rightMotor.isMoving() && steadyState == true) {
+    if (signedSquare(ldiff) < LIGHT_DIFF_THRESHOLD && rightMotor.isMoving() 
+        && steadyState == true &&  Main.ENABLE_CORRECTION == true) {
       steadyState= false;
       /**
        * slow down other motor if this is 1st line detected
@@ -100,7 +103,7 @@ public class rightPoller implements TimerListener {
       if(leftMotor.isMoving() == true)
         {
           angle = odometer.getXYT()[2];
-          leftMotor.setSpeed(80);
+          leftMotor.setSpeed(120);
         }
       rightMotor.stop();
       OdometryCorrection.correctParallel(angle);
@@ -110,8 +113,6 @@ public class rightPoller implements TimerListener {
       }    
     LCD.drawString("l: " + ldiff, 0, 5);
     if(lstoppedFlag == true)
-    System.out.print(odometer.getXYT()[1]);
-    System.out.println(", " + ldiff);
     if(signedSquare(ldiff) > 0)
       steadyState = true;
     /*

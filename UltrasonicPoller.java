@@ -25,7 +25,6 @@ public class UltrasonicPoller implements TimerListener {
 	 */
 	public UltrasonicPoller() {
 		usData = new float[US_SENSOR.sampleSize()];
-		//US_SENSOR.getDistanceMode().fetchSample(usData, 0);
 		//store inverse distance rather than distance for quicker harmonic mean calculations
 		//data in inverse mm
 		int closeness = (int) (SCALE_FACTOR / 2.55); // extract from buffer, convert to
@@ -91,7 +90,7 @@ public class UltrasonicPoller implements TimerListener {
 		// don't want to sort buffer directly because want to maintain input
 		// order
 		//Arrays.sort(temp);
-		System.out.println( ((int) (10 * odometer.getXYT()[2])) / 10.0 + ", " + (SCALE_FACTOR * 100) /harmonic);
+	
 	}
 
 	/**
