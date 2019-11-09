@@ -53,8 +53,8 @@ public class Launcher {
    * @param angle angle relative to neutral/loading position
    */
   public static void moveLaunchers(int angle) {
-    Resources.launchMotor1.rotateTo(-angle, true);
-    Resources.launchMotor2.rotateTo(-angle, false);
+    Resources.launchMotor1.rotateTo(angle, true);
+    Resources.launchMotor2.rotateTo(angle, false);
   }
 
   /**
@@ -65,7 +65,7 @@ public class Launcher {
     launchMotor1.setSpeed(RESET_SPEED);
     launchMotor2.setSpeed(RESET_SPEED);
     Main.sleepFor(200);
-    moveLaunchers(-80);
+    moveLaunchers(-50);
     /**
      * set it back to the launch speed.
      */
@@ -92,7 +92,7 @@ public class Launcher {
       launchMotor1.setSpeed(speed);
       launchMotor2.setSpeed(speed);
       Sound.beepSequence();
-      moveLaunchers(100);
+      moveLaunchers(50);
       launchMotor1.stop();
       launchMotor2.stop();
       Main.sleepFor(500);

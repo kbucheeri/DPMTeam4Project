@@ -1,5 +1,5 @@
 /**
- * Osman Warsi and Khalid Bucheeri
+ * Khaled Bucheeri
  */
 package ca.mcgill.ecse211.team4;
 
@@ -26,60 +26,29 @@ public class Main {
    // double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
     new Thread(new Display()).start();
     new Thread(odometer).start();
+ 
     //System.out.println("max speed: " + launchMotor1.getMaxSpeed());
     UltrasonicPoller usPoller = new UltrasonicPoller();
-    Timer usTimer = new Timer(200, usPoller);
+    Timer usTimer = new Timer(220, usPoller);
     lightPoller.initialize(150); 
     rightPoller.initialize(150);
     usTimer.start();
-    sleepFor(1000);
+    sleepFor(200);
     UltrasonicLocalizer.RisingEdge();
     sleepFor(500); 
     Sound.buzz();
     usTimer.setDelay(5000);     // increase sleep time to decrease processing requirement*/
     lightPoller.begin();
     rightPoller.begin();
-    Main.ENABLE_CORRECTION = true;
     LightLocalizer.localizeDistance();
-    Button.waitForAnyPress();  
+    Button.waitForAnyPress();
+    Navigation.travelToParallel(30.5, 30.5);
+    Button.waitForAnyPress(); 
     Launcher.launchThenWaitTest();
     System.exit(0);
     Navigation.travelTo(0, TILE_SIZE * 5);
 
-    System.exit(0);
-    while(true)
-    {
-      if(Navigation.isNavigating() == false) //done navigating
-      {
-    	  if(Math.abs(odometer.getXYT()[1] - TILE_SIZE * 5) < 1) //close to the target
-    		  	break;
-    	  else if(OdometryCorrection.isCorrecting() == false)
-    		  Navigation.travelTo(0, TILE_SIZE * 5);
-    		  
-      }
-      //currently navigating
-      sleepFor(800);
-    }
-    Sound.beepSequenceUp();
-    sleepFor(500); 
-    while(true)
-    {
-      if(Navigation.isNavigating() == false) //done navigating
-      {
-          if(Math.abs(odometer.getXYT()[0] - TILE_SIZE * 3) < 1) //close to the target
-                break;
-          else if(OdometryCorrection.isCorrecting() == false)
-              Navigation.travelTo(TILE_SIZE * 3, 0);
-              
-      }
-      //currently navigating
-      sleepFor(800);
-    }
-    sleepFor(500);
-  //  Sound.buzz();
-    lightPoller.changeRate(150);     // increase sleep time to decrease processing requirement
-    Button.waitForAnyPress();
-      System.exit(0);
+    
     
     
     Button.waitForAnyPress();
@@ -208,19 +177,27 @@ public class Main {
    */
   public static void travelTo(double x, double y)
   {
+    int count = 0;
     while(true)
     {
+      count++;
+      if(count > 5)
+        break;
+    /*  System.out.println("Current: " + (int) x + ", " + (int) y + ", " + (int) odometer.getXYT()[2]);
+      System.out.println(Navigation.isNavigating()); System.out.println(LightLocalizer.LOCALIZING);
+      System.out.println(OdometryCorrection.doneCorrecting() ); System.out.println(OdometryCorrection.isCorrecting());
+      System.out.println("Distance: " + Math.hypot(odometer.getXYT()[0] - x, odometer.getXYT()[1] - y)); */
       if(Navigation.isNavigating() == false) //done navigating
       {
-          if(Math.hypot(odometer.getXYT()[0] - x, odometer.getXYT()[1] - y) < 1) //close to the target
-                break;
-          else if(OdometryCorrection.isCorrecting() == false)
-              Navigation.travelTo(x, y);
-              
+          if(Math.hypot(odometer.getXYT()[0] - x, odometer.getXYT()[1] - y) < 0.25
+              || LightLocalizer.LOCALIZING == true) //close to the target
+          { break;}
+          else if(OdometryCorrection.doneCorrecting() == true || OdometryCorrection.isCorrecting() == false) //&& OdometryCorrection.isCorrecting() == false) //dont want to keep going forward if localizing
+            Navigation.travelTo(x, y); 
       }
       //currently navigating
-      sleepFor(800);
+      sleepFor(200);
     }
-    
+    Navigation.travelTo(x, y);
   }
 }

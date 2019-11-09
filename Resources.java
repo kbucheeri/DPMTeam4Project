@@ -32,7 +32,7 @@ public class Resources {
   /**
    * Derivative threshold for detecting lines.
    */
-  public static final int LIGHT_DIFF_THRESHOLD = -50;
+  public static final int LIGHT_DIFF_THRESHOLD = -75;
   /**
    * distance to back up after detecting a line
    */
@@ -53,7 +53,7 @@ public class Resources {
   /**
    * The robot width in centimeters.
    */
-  public static final double TRACK = 10;
+  public static final double TRACK = 9.5;
   /**
    * Wall follower speed
    */
@@ -84,7 +84,7 @@ public class Resources {
   /**
    * Offset between sensor and wheels. (magnitude)
    */
-  public static final int SENSOR_TO_WHEEL_DISTANCE = 4;
+  public static final int SENSOR_TO_WHEEL_DISTANCE = 5;
 
   /**
    * angle between light sensor position and wheelbase centre in degrees
@@ -93,7 +93,7 @@ public class Resources {
   /**
    * Speed when moving launcher to initial position
    */
-  public static final int RESET_SPEED = 20;
+  public static final int RESET_SPEED = 40;
 
   /**
    * The left motor.

@@ -26,13 +26,12 @@ public class UltrasonicPoller implements TimerListener {
 	public UltrasonicPoller() {
 		usData = new float[US_SENSOR.sampleSize()];
 		//store inverse distance rather than distance for quicker harmonic mean calculations
-		//data in inverse mm
-		int closeness = (int) (SCALE_FACTOR / 2.55); // extract from buffer, convert to
+		//data in inverse 
 		// cm, cast to int
 		//initalize buffer array
 		for (int i = 0; i < buffer.length; i++)
-			buffer[i] = closeness;
-		harmonic = closeness; //initalize average
+			buffer[i] = 100;
+		median = 100; //initalize average
 	}
 
 	
@@ -44,12 +43,9 @@ public class UltrasonicPoller implements TimerListener {
 	public void timedOut() {
 		US_SENSOR.getDistanceMode().fetchSample(usData, 0); // acquire distance
 															// data in meters
-		if(usData[0] > 2.55)
-		//distance = (int) (usData[0] * 100.0); // extract from buffer, convert to cm, cast to int
-			usData[0] = (float) 2.55; //clamping to prevent error
 	//	if(usData[0] != 0)
-			closeness = (int) (SCALE_FACTOR / usData[0]);
-		filter(closeness);
+			distance = (int) ( 100 *  usData[0]);
+		filter(distance);
 	}
 
 
@@ -59,37 +55,32 @@ public class UltrasonicPoller implements TimerListener {
 	 * 
 	 * @see java.lang.Thread#run()
 	 */
-	static int closeness;
+	static int distance;
 	/**
 	 * buffer stores inverse distance
 	 */
 	int[] buffer = new int[5];
 	final static int SCALE_FACTOR = 2048; // = 2^20
 	//stores the mean closeness / harmonic distance
-	static int harmonic;
+	static int median;
 
 	/**
 	 * Stores data in the buffer array, then calculates the harmonic mean.
 	 */
-	void filter(int closeness) {
-	  if(harmonic == 0)
-        harmonic = (int) (SCALE_FACTOR / buffer[buffer.length - 1]);
-	if (closeness >= 0) {
-			//recursive formula to compute the mean.
-			harmonic = (harmonic * buffer.length - buffer[0] + closeness) / buffer.length;
-			/**
-			 * shift all values to left, i.e moving buffer
-			 */
+	void filter(int distance) {
+	if (distance >= 0) {
 			for (int i = 0; i < buffer.length - 1; i++) {
 				buffer[i] = buffer[i + 1];
 			}
-			buffer[buffer.length - 1] = closeness;
+			buffer[buffer.length - 1] = distance;
 		}		
 		
-		//int[] temp = buffer.clone();
+		int[] temp = buffer.clone();
 		// don't want to sort buffer directly because want to maintain input
 		// order
-		//Arrays.sort(temp);
+		Arrays.sort(temp);
+		median = temp[temp.length / 2];
+		
 	
 	}
 
@@ -101,7 +92,7 @@ public class UltrasonicPoller implements TimerListener {
 		/*
 		 * convert back to distance in cm
 		 */
-		return (int) ((SCALE_FACTOR * 100)/harmonic);
+		return (int) (median);
 	}
 
 }

@@ -34,7 +34,7 @@ public class lightPoller implements TimerListener {
     }
     averageColor = (int) sum;
     lintensity = averageColor;
-    System.out.println(averageColor);
+ //   System.out.println(averageColor);
     lPoller = new lightPoller();
     lightTimer = new Timer(rate, lPoller);
   }
@@ -104,15 +104,15 @@ public class lightPoller implements TimerListener {
        */
       if (rightMotor.isMoving() == true) {
         angle = odometer.getXYT()[2];
-        rightMotor.setSpeed(120);
+        rightMotor.setSpeed(100);
       }
+      //System.out.println("\n detected left line \n");
       leftMotor.stop();
       OdometryCorrection.correctParallel(angle);
       lstoppedFlag = true;
-      Sound.twoBeeps();
       // Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.
     }
-      if (ldiff > -10)
+      if (ldiff > -20)
         steadyState = true;
 
    // System.out.println(((int) (odometer.getXYT()[1] * 100)) / 100.0 + ", " + signedSquare(ldiff) + ",  " + ldiff);

@@ -7,9 +7,11 @@ import lejos.utility.Timer;
 import lejos.utility.TimerListener;
 
 public class OdometryCorrection {
+ 
   public static void startCorrecting() {
     correctingStatus = true;
   }
+  
   private static double initial_angle;
   private static boolean correctingStatus = false;
 
@@ -40,7 +42,7 @@ public class OdometryCorrection {
     {
       double[] currentPosition = odometer.getXYT();
       if (angle < 15 || angle > 340 
-          || (angle < 200 && angle > 160)) // travelling                                                                                                                       // vertically
+          || (angle > 160 && angle < 200)) // travelling                                                                                                                       // vertically
       {
         if(LightLocalizer.LOCALIZING == true)
         {
@@ -60,21 +62,50 @@ public class OdometryCorrection {
         }
       
       
-      
-      if(Math.abs(initial_angle - currentPosition[2]) < 45) //Too much correction. Probably a fault
-        odometer.setTheta(determineAngle(angle));
+     if(LightLocalizer.LOCALIZING == true)
+     {
+       if(LightLocalizer.LOCALIZINGY == true)
+         odometer.setTheta(0);
+       else
+         odometer.setTheta(90);
+     }
+     else {
+     if(Math.abs(initial_angle - currentPosition[2]) < 30) //Too much correction. Probably a fault
+       odometer.setTheta(determineAngle(odometer.getXYT()[2])); }
       correctingStatus = false;
-    } else
+      correctionDone = true; //correcting ended
+    } 
+    else
     {
       startCorrecting();
       initial_angle = angle;
+      correctionDone = false; //begun correcting
     }
   }
-
+  private static boolean correctionDone = true;
+/**
+ * tells robot if done correcting (To issue another navigation command
+ * @return
+ */
+  public static boolean doneCorrecting()
+  {
+    return correctionDone;
+  }
   /**
    * Used for navigation (only issues another motor command when it finishes correcting)
    */
   public static boolean isCorrecting() {
     return correctingStatus;
   }
+  /**
+   * Enable/disable odometry correction
+   * @param status - set correction to true/false. True means you enable correction
+   */
+  public static void toggleCorrection(boolean status)
+  {
+    Main.ENABLE_CORRECTION = status;
+  }
+  /**
+   * starts correction
+   */
 }

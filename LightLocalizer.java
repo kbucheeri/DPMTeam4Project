@@ -11,42 +11,51 @@ import lejos.hardware.lcd.LCD;
 public class LightLocalizer {
   public static int[] buffer = new int[5];
   public static boolean LOCALIZING = false;
-
+  public static boolean LOCALIZINGX = false;
+  public static boolean LOCALIZINGY = false;
   /**
    * Performs light localization
    * Assumes it starts facing 0 degrees in the corner block
    * Makes the robot go to the closest intersection of the axes
    */
   public static void localizeDistance() {
-    LOCALIZING = true;
-    /**
-     * Float Array to store RGB Raw values
-     */
-    leftMotor.setSpeed(100);
-    rightMotor.setSpeed(100);
-    Navigation.turnTo(0);
+    Main.ENABLE_CORRECTION = false;
+    leftMotor.rotate(-Navigation.convertDistance(2), true); //to prevent being over the line, travel backwards
+    rightMotor.rotate(-Navigation.convertDistance(2), false);
     Main.ENABLE_CORRECTION = true;
-    Navigation.travelTo(STARTING_X, STARTING_Y + 10);
- //   Main.ENABLE_CORRECTION = false;
+    LOCALIZING = true;
+    LOCALIZINGY = true;
     leftMotor.setSpeed(100);
     rightMotor.setSpeed(100);
+    Navigation.travelTo(odometer.getXYT()[0], odometer.getXYT()[1] + 50);
+ //   Main.ENABLE_CORRECTION = false;
  //   leftMotor.rotate(Navigation.convertDistance(12), true);
  //   rightMotor.rotate(Navigation.convertDistance(12), false);
     //back up
-    Main.ENABLE_CORRECTION = true;
-    sleepFor(200);  
-    Navigation.turnTo(90);
-    sleepFor(100);
-    Main.travelTo(odometer.getXYT()[0] + 20, odometer.getXYT()[1]);
-    sleepFor(100);
+    LOCALIZINGY=false;
+    LOCALIZINGX = true;
     Main.ENABLE_CORRECTION = false;
-    Navigation.travelToParallel(STARTING_X, STARTING_Y);
+    Sound.beepSequenceUp();
+    Navigation.travelTo(odometer.getXYT()[0], STARTING_Y);  
+    Main.ENABLE_CORRECTION = true;
+    Sound.buzz();
+    Navigation.travelTo(odometer.getXYT()[0]+ 20, odometer.getXYT()[1]);
+    Main.ENABLE_CORRECTION = false;
+    LOCALIZINGX = false;
+    LOCALIZING = false;
+  //  Navigation.travelTo(STARTING_X, STARTING_Y);
+    Navigation.turnTo(90);
+    leftMotor.rotate(Navigation.convertDistance(SENSOR_TO_WHEEL_DISTANCE), true); //to prevent being over the line, travel backwards
+    rightMotor.rotate(Navigation.convertDistance(SENSOR_TO_WHEEL_DISTANCE), false);
+    odometer.setXYT(0, 0, 90);
     sleepFor(100);
+  //  odometer.setTheta(-90); //hardcoded
     Navigation.turnTo(0);
     sleepFor(200);
     Main.ENABLE_CORRECTION = true;
     Sound.twoBeeps();
-    LOCALIZING = false;
+    Sound.twoBeeps();
+  //  System.out.println("Current coord: " + (int) odometer.getXYT()[0] + ", "+ (int) odometer.getXYT()[1] +", " + (int) odometer.getXYT()[2]);
   }
 
   /**

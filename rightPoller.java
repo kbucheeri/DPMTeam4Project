@@ -21,10 +21,18 @@ public class rightPoller implements TimerListener {
    * intialize buffer array and lightTimer
    */
   public static void initialize(int rate) {
-    lPoller = new rightPoller();
-    lightTimer = new Timer(rate, lPoller);   
-    averageColor = lightPoller.averageColor;
+    double sum = 0;
+    for (int i = 0; i < 30; i++) {
+      float[] lightData = new float[lightSensor.sampleSize()];
+      lightSensor.getRedMode().fetchSample(lightData, 0);
+      sum += (lightData[0] * 1024) / 30.0;
+      Main.sleepFor(30);
+    }
+    averageColor = (int) sum;
     lintensity = averageColor;
+   // System.out.println(averageColor);
+    lPoller = new rightPoller();
+    lightTimer = new Timer(rate, lPoller);
   }
 
   /**
@@ -65,7 +73,6 @@ public class rightPoller implements TimerListener {
     rightSensor.getRedMode().fetchSample(lightData, 0);
     /**
      * Resizing the actual intensity values to make it more readable and thus easier to test. Also easier to deal with
-     * ints than double precision
      */
     lintensity = (int) (lightData[0] * 1024);
     // System.out.println(lintensity + ", " + lprevIntensity);
@@ -99,15 +106,14 @@ public class rightPoller implements TimerListener {
       if(leftMotor.isMoving() == true)
         {
           angle = odometer.getXYT()[2];
-          leftMotor.setSpeed(120);
+          leftMotor.setSpeed(100);
         }
       rightMotor.stop();
+   //   System.out.println("\n detected right line \n");
       OdometryCorrection.correctParallel(angle);
-      lstoppedFlag = true;
-      Sound.twoBeeps();
      //   Navigation.travelTo(currentXdest, currentYdest); //continue navigting to old desitination.       
       }    
-    if(ldiff > -10)
+    if(ldiff > -20)
       steadyState = true;
     /*
      * if(t == true) System.out.println(((int) (odometer.getXYT()[1] * 100)) / 100.0 + ", " + signedSquare(ldiff) +
