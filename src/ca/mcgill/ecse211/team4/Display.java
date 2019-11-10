@@ -1,7 +1,10 @@
 package ca.mcgill.ecse211.team4;
 
 import static ca.mcgill.ecse211.team4.Resources.*;
+
 import java.text.DecimalFormat;
+
+import lejos.hardware.lcd.LCD;
 
 /**
  * This class is used to display the content of the odometer variables (x, y, Theta)
@@ -9,7 +12,7 @@ import java.text.DecimalFormat;
 public class Display implements Runnable {
 
   private double[] position;
-  private final long DISPLAY_PERIOD = 505;
+  private final long DISPLAY_PERIOD = 50;
   private long timeout = Long.MAX_VALUE;
 
   public void run() {

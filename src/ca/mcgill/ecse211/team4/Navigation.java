@@ -3,12 +3,22 @@ package ca.mcgill.ecse211.team4;
 import static ca.mcgill.ecse211.team4.Resources.*;
 import ca.mcgill.ecse211.team4.Resources;
 import lejos.hardware.Sound;
+
 /**
  * Contains all the static methods related to navigation
  * @author Khaled Bucheeri
  *
  */
+
 public class Navigation {
+  /**
+   * Travels to a point but moving parallel to coordinate axes
+   */
+  public static void travelToParallel(double x, double y)
+  {
+    travelTo(x, odometer.getXYT()[1]); //travel only in x direction
+    travelTo(x, y); //x direction moved to, so now move in y.
+  }
   private static boolean navigationStatus = false;
 
   public Navigation() {
@@ -17,7 +27,8 @@ public class Navigation {
     leftMotor.setAcceleration(ACCELERATION);
     rightMotor.setAcceleration(ACCELERATION);
   }
-
+  public static double currentXdest;
+  public static double currentYdest;
   /**
    * 
    * @param x absolute position of the coordinate to travel to.
@@ -25,7 +36,10 @@ public class Navigation {
    */
   public static void travelTo(double x, double y) {
     navigationStatus = true;
-   
+    currentXdest = x;
+    currentYdest = y;
+    leftMotor.stop();
+    rightMotor.stop();
     double[] position = Resources.odometer.getXYT();
     /**
      * vector to move from current position to the next
@@ -79,10 +93,17 @@ public class Navigation {
    * @param theta relative angle to turn to
    */
   public static void turn(double theta) {
+    boolean enable_status = Main.ENABLE_CORRECTION; //store correction status then revert at the end
+    Main.ENABLE_CORRECTION = false; //dont want correction when rotating in place
+    leftMotor.stop();
+    rightMotor.stop();
     leftMotor.setSpeed(ROTATE_SPEED);
     rightMotor.setSpeed(ROTATE_SPEED);
     leftMotor.rotate(convertAngle(theta), true);
     rightMotor.rotate(-convertAngle(theta), false);
+    
+    
+    Main.ENABLE_CORRECTION = enable_status;
   }
 
   /**
@@ -90,7 +111,11 @@ public class Navigation {
    * @param theta angle to turn to in absolute units
    */
   public static void turnTo(double theta) {
+    boolean enable_status = Main.ENABLE_CORRECTION; //store correction status then revert at the end
+    Main.ENABLE_CORRECTION = false; //dont want correction when rotating in place
     // take in current angle
+    leftMotor.stop();
+    rightMotor.stop();
     double currentAngle = Resources.odometer.getXYT()[2];
     double turn = theta - currentAngle;
     if (Math.abs(turn) > 180) // maximal turn
@@ -107,6 +132,8 @@ public class Navigation {
     rightMotor.forward();
     leftMotor.rotate(convertAngle(turn), true);
     rightMotor.rotate(-convertAngle(turn), false);
+    
+    Main.ENABLE_CORRECTION = enable_status;
   }
 
   /**

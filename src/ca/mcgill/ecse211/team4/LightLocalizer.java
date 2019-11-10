@@ -10,85 +10,58 @@ import lejos.hardware.lcd.LCD;
  */
 public class LightLocalizer {
   public static int[] buffer = new int[5];
-
-
+  public static boolean LOCALIZING = false;
+  public static boolean LOCALIZINGX = false;
+  public static boolean LOCALIZINGY = false;
   /**
    * Performs light localization
    * Assumes it starts facing 0 degrees in the corner block
    * Makes the robot go to the closest intersection of the axes
    */
   public static void localizeDistance() {
-    /**
-     * Float Array to store RGB Raw values
-     */
+    Main.ENABLE_CORRECTION = false;
+    leftMotor.rotate(-Navigation.convertDistance(2), true); //to prevent being over the line, travel backwards
+    rightMotor.rotate(-Navigation.convertDistance(2), false);
+    Main.ENABLE_CORRECTION = true;
+    LOCALIZING = true;
+    LOCALIZINGY = true;
     leftMotor.setSpeed(100);
     rightMotor.setSpeed(100);
-    Navigation.turnTo(0);
-    sleepFor(300);
-    leftMotor.forward();
-    rightMotor.forward();
-    // if light sensing returns to 0 to prevent multiple line readings.
-    boolean steadyState = true;
-    sleepFor(100);
-    /*
-     * in the sweep. stops when either of the motors stop.
-     */
-    while (true) {
-      
-      int diff = lightPoller.getIntensity();
-      if (diff > 0) // negative value, so has returned to steady state (fluctuations around 0,0)
-        steadyState = true;
-      /*
-       * spike of less than -75 implies a line has been detected. steadyState makes it
-       * so that it only looks for lines again after it goes back to 0, i.e doesn't detect same lines multiple times.
-       */
-      if (diff < LIGHT_DIFF_THRESHOLD && steadyState == true) {
-        
-        Sound.beepSequence();
-        steadyState = false;
-        break;
-      }
-      sleepFor(100);
-    }
-    odometer.setY(-Resources.SENSOR_TO_WHEEL_DISTANCE);
-    leftMotor.stop();
-    rightMotor.stop();
-    leftMotor.rotate(Navigation.convertDistance(8), true);
-    rightMotor.rotate(Navigation.convertDistance(8), false);
+    Navigation.travelTo(odometer.getXYT()[0] - 5, odometer.getXYT()[1] + 50);
+   // Button.waitForAnyPress();
+    sleepFor(500);
+ //   Main.ENABLE_CORRECTION = false;
+ //   leftMotor.rotate(Navigation.convertDistance(12), true);
+ //   rightMotor.rotate(Navigation.convertDistance(12), false);
     //back up
-    sleepFor(600);
+    LOCALIZINGY=false;
+    LOCALIZINGX = true;
+    Main.ENABLE_CORRECTION = false;
+    Sound.beepSequenceUp();
+    Navigation.travelTo(odometer.getXYT()[0], STARTING_Y); 
+ 
+    Main.ENABLE_CORRECTION = true;
+    Sound.buzz();
+    //Button.waitForAnyPress();
+    sleepFor(500);
+    Navigation.travelTo(odometer.getXYT()[0]+ 20, odometer.getXYT()[1]);
+    Main.ENABLE_CORRECTION = false;
+    LOCALIZINGX = false;
+    LOCALIZING = false;
+  //  Navigation.travelTo(STARTING_X, STARTING_Y);
     Navigation.turnTo(90);
-    sleepFor(600);
-    leftMotor.forward();
-    rightMotor.forward();
-    steadyState = true;
-    while (true) {
-      int diff = lightPoller.getIntensity();
-      if (diff > 0) // negative value, so has returned to steady state (fluctuations around 0,0)
-        steadyState = true;
-      /*
-       * spike of less than -75 implies a line has been detected. steadyState makes it
-       * so that it only looks for lines again after it goes back to 0, i.e doesn't detect same lines multiple times.
-       */
-      LCD.drawString("Diff: " + diff, 0, 5);
-      if (diff < Resources.LIGHT_DIFF_THRESHOLD && steadyState == true) {
-        
-        Sound.beepSequence();
-        steadyState = false;
-        break;
-
-      }
-      sleepFor(50);
-    }
-    odometer.setX(-Resources.SENSOR_TO_WHEEL_DISTANCE);
-    rightMotor.stop();
-    leftMotor.stop();
     sleepFor(500);
-    Navigation.travelTo(0, 0);
-    sleepFor(500);
+    leftMotor.rotate(Navigation.convertDistance(SENSOR_TO_WHEEL_DISTANCE), true); //to prevent being over the line, travel backwards
+    rightMotor.rotate(Navigation.convertDistance(SENSOR_TO_WHEEL_DISTANCE), false);
+    odometer.setXYT(0, 0, 90);
+    sleepFor(100);
+  //  odometer.setTheta(-90); //hardcoded
     Navigation.turnTo(0);
-    sleepFor(400);
+    sleepFor(200);
+    Main.ENABLE_CORRECTION = true;
     Sound.twoBeeps();
+    Sound.twoBeeps();
+  //  System.out.println("Current coord: " + (int) odometer.getXYT()[0] + ", "+ (int) odometer.getXYT()[1] +", " + (int) odometer.getXYT()[2]);
   }
 
   /**

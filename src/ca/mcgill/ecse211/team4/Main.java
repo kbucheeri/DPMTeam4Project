@@ -1,6 +1,5 @@
 /**
- * Osman Warsi, Mairead Maloney, Davide Bartolucci, Yuxiang Ma and Khalid Bucheeri
-
+ * Khaled Bucheeri
  */
 package ca.mcgill.ecse211.team4;
 
@@ -9,13 +8,14 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
+import lejos.utility.Timer;
 
 /**
  * The main driver class for the entire program.
  * @version 1.00
  */
-
 public class Main {
+  public static boolean ENABLE_CORRECTION = true;
 
   /**
    * The main entry point.
@@ -23,69 +23,142 @@ public class Main {
    * @param args
    */
   public static void main(String[] args) {
-    /*
-     * Variables
-     */
-    int[] starting_coords = new int[2]; //array of x and y values for starting position
-    double tunnel_entry_x;
-    double tunnel_entry_y;
-    double tunnel_exit_x;
-    double tunnel_exit_y;
-    Color color;
-    Team team;
-    
-    
-    /**
-     * Start general threads
-     */
-    //Display
-    new Thread(new Display()).start();
-    
-    //Odometer
+   // double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
+   // new Thread(new Display()).start();
     new Thread(odometer).start();
-    
-    
-    //Localize to 0 degrees
-    localizeAngle();
-    
-    //Localize to starting point
-    localizePosition();
-       
-    //Get team color
-    color = getColor();
-    
-    if(color.equals(Color.RED)) {
-      System.out.println(red);
-      team = new Team(redCorner, red, tnr, bin);
-    }
-    else {
-      team = new Team(greenCorner, green, tng, bin);
-    }
-    
-    //robot is currently at top right corner of given corner of the field (0,1,2 or 3) after localization
-    int currPos[] = getStartingPoint(team.corner);
-    odometer.setXYT(getRealCoord(currPos[0]), getRealCoord(currPos[1]), 0);
-
+ Launcher.launchThenWaitTest();
+    //System.out.println("max speed: " + launchMotor1.getMaxSpeed());
+    UltrasonicPoller usPoller = new UltrasonicPoller();
+    Timer usTimer = new Timer(220, usPoller);
+    lightPoller.initialize(200); 
+    rightPoller.initialize(200);
+    usTimer.start();
+    sleepFor(200);
+    UltrasonicLocalizer.RisingEdge();
+    sleepFor(500); 
+    Sound.buzz();
+    usTimer.setDelay(5000);     // increase sleep time to decrease processing requirement*/
+    lightPoller.begin();
+    rightPoller.begin();
+    LightLocalizer.localizeDistance();
+    Button.waitForAnyPress();
+    Main.ENABLE_CORRECTION = false;
+    Navigation.travelToParallel(30.5, 30.5);
+    Button.waitForAnyPress(); 
    
-   //Get coordinates for entry point of the tunnel
-     tunnel_entry_x = getRealCoord(team.tunnelCoords[0]-1);
-     tunnel_entry_y = getRealCoord((team.tunnelCoords[1]+(team.tunnelCoords[3]))/2);
-         
-    //Navigate to tunnel entry point
-    Navigation.travelTo(tunnel_entry_x, tunnel_entry_y);    
+    System.exit(0);
+    Navigation.travelTo(0, TILE_SIZE * 5);
+
     
-    //Navigate to tunnel exit point
-    tunnel_exit_x = getRealCoord((team.tunnelCoords[3])+1);
-    tunnel_exit_y = tunnel_entry_y;
     
-    Navigation.travelTo(tunnel_exit_x, tunnel_exit_y);
-    Sound.beepSequence();
-    //Navigate to launch point
-    ObstacleAvoider oa = new ObstacleAvoider(odometer, WHEEL_RAD, TRACK, TILE_SIZE);
-    oa.boolTravelTo((double)tunnel_exit_x, (double)tunnel_exit_y);
-    //Launch
     
+    Button.waitForAnyPress();
+    // Launcher.launchThenWaitTest();
+   
+    localize();
+   
+    // didn't test turnToPoint
+    // Navigation.turnToPoint(Tx, Ty);
+    // Launcher.launchThenWaitTest();
+  //  Button.waitForAnyPress();
+    Launcher.launchThenWaitTest();
+    System.out.println("max speed" + launchMotor1.getMaxSpeed());
+    Sound.beepSequenceUp();
+
+    Button.waitForAnyPress();
+
+    LCD.clear();
+    /*
+     * // new Thread(new OdometryCorrectionTest()).start();
+     */
+    while (true) {
+      /*
+       * navigated to last pooint, receive next command
+       */
+
+
+      if (Button.waitForAnyPress() != Button.ID_ESCAPE)
+        System.exit(0);
+
+    }
+  }
+
+
   
+  /**
+   * initiates localization routines (ultrasonic, light)
+   */
+  private static void localize() {
+    System.out.println("max speed: " + launchMotor1.getMaxSpeed());
+    UltrasonicPoller usPoller = new UltrasonicPoller();
+    Timer usTimer = new Timer(100, usPoller);
+    sleepFor(500);
+    UltrasonicLocalizer.RisingEdge();
+    sleepFor(500);
+    Sound.buzz();
+    usTimer.setDelay(1000);     // increase sleep time to decrease processing requirement
+   // new Thread(new lightPoller()).start();
+   // Button.waitForAnyPress();
+    // LightLocalizer.localizeAngle();
+  }
+
+  /**
+   * Travels to the launch point on the island
+   * 
+   * @param Tx - centre of the square x coordinate
+   * @param Ty - centre of the square y coordinate
+   */
+  public static void travelToLaunchPoint(double Tx, double Ty) {
+
+    double dist = Math.hypot(Tx, Ty); // distane to robot, since robot starts at 0,0
+    int bound = (int) (120 + Math.max(20, TRACK));
+    double distCentreX = 90 - Tx; // distance from centre for cases where traget square is near centre
+    double distCentreY = 90 - Ty;
+    if (Math.abs(dist - 120.0) < 2) // already within the error
+    {
+      Navigation.turnTo(90 - Math.toDegrees(Math.atan2(Ty, Tx)));
+    } else if (Ty > 60 && Ty < 120 && (Tx > 60 && Tx < 120)) {
+      /*
+       * (Tx > 90) { sleepFor(100); Navigation.travelTo(Tx - 120 / 1.41 - 2 * distCentreX, Ty + 120 / 1.41 + 2 *
+       * distCentreY); sleepFor(1000); Navigation.turnToPoint(Tx, Ty); sleepFor(500); } else { sleepFor(100);
+       * Navigation.travelTo(Tx - 120 / 1.41 - 2 * distCentreX, Ty + 120 / 1.41 + 2 * distCentreY); sleepFor(1000);
+       * Navigation.turnToPoint(Tx, Ty); sleepFor(500); }
+       */
+      sleepFor(100);
+      Navigation.travelTo(Tx + 120 / 1.41 + 2 * distCentreX, Ty + 120 / 1.41 + 2 * distCentreY);
+      sleepFor(1000);
+      Navigation.turnToPoint(Tx, Ty - 30);
+      sleepFor(500);
+    } else if (Ty < bound) {
+      Navigation.travelTo(Tx, Ty + 120 + 8 + 30);
+      sleepFor(1000);
+      Navigation.turnTo(180);
+      sleepFor(500);
+    } else if (Ty > bound) {
+      
+      
+      
+      Navigation.travelTo(Ty - 5 - 120 - 25, Tx - 15 + 15);
+      Sound.twoBeeps();
+      sleepFor(1000);
+      Navigation.turnTo(90);
+      sleepFor(600);
+      Navigation.turnTo(90);
+      sleepFor(600);
+      
+    } else if (Tx < bound) {
+      Navigation.travelTo(Tx + 120 + 8, Ty + 30 );
+      Sound.twoBeeps();
+      sleepFor(1000);
+      Navigation.turnTo(270);
+      sleepFor(500);
+    } else if (Tx > bound) {
+      Navigation.travelTo(Tx - 5 - 120, Ty + 30);
+      Sound.twoBeeps();
+      sleepFor(1000);
+      Navigation.turnTo(90);
+      sleepFor(500);
+    }
   }
 
   /**
@@ -101,93 +174,31 @@ public class Main {
     }
   }
   /**
-   * Uses ultrasonic localization to determine angle and adjust robot to 0 degrees
+   * includes a loop, just in case
    */
-  public static void localizeAngle() {
-    //start ultrasonic poller to get data for angle position
-    new Thread(new UltrasonicPoller()).start();
-    sleepFor(1000);
-    UltrasonicLocalizer.RisingEdge(); //uses rising edge to determine angle position from sensor readings
-    sleepFor(500);
-    UltrasonicPoller.setSleepTime(2000);
+  public static void travelTo(double x, double y)
+  {
+    int count = 0;
+    while(true)
+    {
+      count++;
+      if(count > 5)
+        break;
+    /*  System.out.println("Current: " + (int) x + ", " + (int) y + ", " + (int) odometer.getXYT()[2]);
+      System.out.println(Navigation.isNavigating()); System.out.println(LightLocalizer.LOCALIZING);
+      System.out.println(OdometryCorrection.doneCorrecting() ); System.out.println(OdometryCorrection.isCorrecting());
+      System.out.println("Distance: " + Math.hypot(odometer.getXYT()[0] - x, odometer.getXYT()[1] - y)); */
+      if(Navigation.isNavigating() == false) //done navigating
+      {
+          if(Math.hypot(odometer.getXYT()[0] - x, odometer.getXYT()[1] - y) < 0.25
+              || LightLocalizer.LOCALIZING == true) //close to the target
+          { break;}
+          else if(OdometryCorrection.doneCorrecting() == true || OdometryCorrection.isCorrecting() == false) //&& OdometryCorrection.isCorrecting() == false) //dont want to keep going forward if localizing
+            Navigation.travelToParallel(x, y); 
+      }
+      //currently navigating
+      sleepFor(200);
+    }
+    Navigation.travelToParallel(x, y);
   }
-  
-  /**
-   * Localizes robot to the right-top corner of the square it is in
-   * 
-   * @return void
-   */
-  public static void localizePosition() {
-    //start light sensor poller to get data to determine position
-    new Thread(new lightPoller()).start();
-     LightLocalizer.localizeDistance(); //localizes to the right-top corner of the square
-     sleepFor(1000);
-     lightPoller.changeSleepTime(1000);
-  }
-  /**
-   * Gets color for the team
-   * 
-   * @return Team color from Team enumeration (red or green)
-   */
-  public static Color getColor() {
-    //red team
-    if (redTeam == TEAM_NUMBER) {
-      return Color.RED;
-    }
-    //green team
-    else if (greenTeam == TEAM_NUMBER) {
-      return Color.GREEN;
-    }
-    else {
-      return null;
-    }
-  } 
-  
-  /**
-   * 
-   * @param int initial - will be replaced by the value of the corner the robot is in (0,1,2 or 3)
-   * @return 
-   * @return array of position coordinates
-   */
-   public static int[] getStartingPoint(int initial) {
-    int[] position = new int[2];
-    
-    //checks the value of initial, sets the position values accordingly
-     switch(initial) {
-       case 0:
-         position[0] = 1;
-         position[1] = 1;
-        
-       case 1:
-         position[0] = 14;
-         position[1] = 1;
-         
-       case 2:
-         position[0] = 14;
-         position[1] = 8;
-         
-       case 3:
-         position[0] = 1;
-         position[1] = 8;
-     }
-     
-     //return an array of size 2, containing x and y
-     return(position);
-     
-   }
-   
-   /**
-    * @param double coordinate value
-    * @return double real value in cm
-    */
-   public static double getRealCoord(double value) {
-     value*=TILE_SIZE;
-     return value;
-   }
-  
-   
-  
-    
-  
-
 }

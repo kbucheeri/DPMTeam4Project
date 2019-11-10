@@ -73,7 +73,7 @@ public class Odometer implements Runnable {
    * cannot be accessed externally.
    */
   private Odometer() {
-    setXYT(0, 0, 0);
+    setXYT(STARTING_X - 10, STARTING_Y - 10, 0);
   }
 
   /**
@@ -260,7 +260,7 @@ public class Odometer implements Runnable {
   }
   /**
    *
-   * @param dtheta amount to increment Theta by. Used for localization
+   * @param dtheta amount to increment Theta. Used for localization
    */
   public void incrementTheta(double dtheta) {
     lock.lock();
