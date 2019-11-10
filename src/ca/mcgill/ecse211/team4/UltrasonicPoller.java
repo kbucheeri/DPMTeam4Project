@@ -44,7 +44,7 @@ public class UltrasonicPoller extends Thread {
     new BangBangController(leftMotor, rightMotor, WHEEL_RAD, TRACK);
   }
 
-  private SampleProvider us;
+  private SampleProvider us = US_SENSOR;
   private BangBangController cont;
 
   public static int distance = 0;

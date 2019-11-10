@@ -30,7 +30,7 @@ public class Resources {
    * The IP address of the server that transmits data to the robot. Set this to the default for the
    * beta demo and competition.
    */
-  public static final String SERVER_IP = "192.168.2.23";
+  public static final String SERVER_IP = "192.168.2.13";
   
   /**
    * Your team number.
@@ -266,6 +266,7 @@ public class Resources {
        * an exception letting you know.
        */
       wifiParameters = conn.getData();
+      System.out.println(wifiParameters.toString());
     } catch (Exception e) {
       System.err.println("Error: " + e.getMessage());
     }
@@ -281,6 +282,8 @@ public class Resources {
     if (wifiParameters != null) {
       return ((BigDecimal) wifiParameters.get(key)).intValue();
     } else {
+      // if (key.contentEquals("RedCorner"))
+        // System.out.println("RedCorner packet loss");
       return 0;
     }
   }

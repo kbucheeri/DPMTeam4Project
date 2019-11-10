@@ -55,6 +55,7 @@ public class Main {
     color = getColor();
     
     if(color.equals(Color.RED)) {
+      System.out.println(red);
       team = new Team(redCorner, red, tnr, bin);
     }
     else {
@@ -68,7 +69,7 @@ public class Main {
    
    //Get coordinates for entry point of the tunnel
      tunnel_entry_x = getRealCoord(team.tunnelCoords[0]-1);
-     tunnel_entry_y = getRealCoord((team.tunnelCoords[1]+(team.tunnelCoords[4]))/2);
+     tunnel_entry_y = getRealCoord((team.tunnelCoords[1]+(team.tunnelCoords[3]))/2);
          
     //Navigate to tunnel entry point
     Navigation.travelTo(tunnel_entry_x, tunnel_entry_y);    
@@ -78,7 +79,7 @@ public class Main {
     tunnel_exit_y = tunnel_entry_y;
     
     Navigation.travelTo(tunnel_exit_x, tunnel_exit_y);
-    
+    Sound.beepSequence();
     //Navigate to launch point
     ObstacleAvoider oa = new ObstacleAvoider(odometer, WHEEL_RAD, TRACK, TILE_SIZE);
     oa.boolTravelTo((double)tunnel_exit_x, (double)tunnel_exit_y);
