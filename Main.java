@@ -26,12 +26,12 @@ public class Main {
    // double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
     new Thread(new Display()).start();
     new Thread(odometer).start();
- 
+
     //System.out.println("max speed: " + launchMotor1.getMaxSpeed());
     UltrasonicPoller usPoller = new UltrasonicPoller();
     Timer usTimer = new Timer(220, usPoller);
-    lightPoller.initialize(150); 
-    rightPoller.initialize(150);
+    lightPoller.initialize(170); 
+    rightPoller.initialize(170);
     usTimer.start();
     sleepFor(200);
     UltrasonicLocalizer.RisingEdge();

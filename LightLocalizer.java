@@ -27,7 +27,8 @@ public class LightLocalizer {
     LOCALIZINGY = true;
     leftMotor.setSpeed(100);
     rightMotor.setSpeed(100);
-    Navigation.travelTo(odometer.getXYT()[0], odometer.getXYT()[1] + 50);
+    Navigation.travelTo(odometer.getXYT()[0] - 5, odometer.getXYT()[1] + 50);
+    Button.waitForAnyPress();
  //   Main.ENABLE_CORRECTION = false;
  //   leftMotor.rotate(Navigation.convertDistance(12), true);
  //   rightMotor.rotate(Navigation.convertDistance(12), false);
@@ -36,15 +37,18 @@ public class LightLocalizer {
     LOCALIZINGX = true;
     Main.ENABLE_CORRECTION = false;
     Sound.beepSequenceUp();
-    Navigation.travelTo(odometer.getXYT()[0], STARTING_Y);  
+    Navigation.travelTo(odometer.getXYT()[0], STARTING_Y); 
+ 
     Main.ENABLE_CORRECTION = true;
     Sound.buzz();
+    Button.waitForAnyPress();
     Navigation.travelTo(odometer.getXYT()[0]+ 20, odometer.getXYT()[1]);
     Main.ENABLE_CORRECTION = false;
     LOCALIZINGX = false;
     LOCALIZING = false;
   //  Navigation.travelTo(STARTING_X, STARTING_Y);
     Navigation.turnTo(90);
+    sleepFor(500);
     leftMotor.rotate(Navigation.convertDistance(SENSOR_TO_WHEEL_DISTANCE), true); //to prevent being over the line, travel backwards
     rightMotor.rotate(Navigation.convertDistance(SENSOR_TO_WHEEL_DISTANCE), false);
     odometer.setXYT(0, 0, 90);

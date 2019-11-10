@@ -80,17 +80,14 @@ public class Testing {
   {
     leftMotor.stop();
     rightMotor.stop();
-    launchMotor1.setAcceleration(999999);
-    launchMotor2.setAcceleration(999999);
     leftMotor.setAcceleration(2000);
     rightMotor.setAcceleration(2000);
     leftMotor.setSpeed(300);
     rightMotor.setSpeed(300);
-    leftMotor.rotate(Navigation.convertAngle(360), true);
-    rightMotor.rotate(-Navigation.convertAngle(360), false);
+    leftMotor.rotate(Navigation.convertAngle(720), true);
+    rightMotor.rotate(-Navigation.convertAngle(720), false);
     leftMotor.stop();
     rightMotor.stop();
-    Main.sleepFor(2000);
   }
     
 
