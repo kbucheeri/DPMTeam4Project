@@ -61,12 +61,12 @@ public class Resources {
   /**
    * The speed at which the robot moves forward in degrees per second.
    */
-  public static final int FORWARD_SPEED = 125; // slowed it down to give motor to increase correction
+  public static final int FORWARD_SPEED = 105; // slowed it down to give motor to increase correction
 
   /**
    * The speed at which the robot rotates in degrees per second.
    */
-  public static final int ROTATE_SPEED = 155;
+  public static final int ROTATE_SPEED = 105;
 
   /**
    * The motor acceleration in degrees per second squared.

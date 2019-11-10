@@ -16,8 +16,8 @@ public class Navigation {
    */
   public static void travelToParallel(double x, double y)
   {
-    Main.travelTo(x, odometer.getXYT()[1]); //travel only in x direction
-    Main.travelTo(x, y); //x direction moved to, so now move in y.
+    travelTo(x, odometer.getXYT()[1]); //travel only in x direction
+    travelTo(x, y); //x direction moved to, so now move in y.
   }
   private static boolean navigationStatus = false;
 

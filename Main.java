@@ -24,14 +24,14 @@ public class Main {
    */
   public static void main(String[] args) {
    // double Tx = 2 * TILE_SIZE + 15, Ty = TILE_SIZE * 5 + 15;
-    new Thread(new Display()).start();
+   // new Thread(new Display()).start();
     new Thread(odometer).start();
 
     //System.out.println("max speed: " + launchMotor1.getMaxSpeed());
     UltrasonicPoller usPoller = new UltrasonicPoller();
     Timer usTimer = new Timer(220, usPoller);
-    lightPoller.initialize(170); 
-    rightPoller.initialize(170);
+    lightPoller.initialize(200); 
+    rightPoller.initialize(200);
     usTimer.start();
     sleepFor(200);
     UltrasonicLocalizer.RisingEdge();
@@ -42,6 +42,7 @@ public class Main {
     rightPoller.begin();
     LightLocalizer.localizeDistance();
     Button.waitForAnyPress();
+    Main.ENABLE_CORRECTION = false;
     Navigation.travelToParallel(30.5, 30.5);
     Button.waitForAnyPress(); 
     Launcher.launchThenWaitTest();
@@ -193,11 +194,11 @@ public class Main {
               || LightLocalizer.LOCALIZING == true) //close to the target
           { break;}
           else if(OdometryCorrection.doneCorrecting() == true || OdometryCorrection.isCorrecting() == false) //&& OdometryCorrection.isCorrecting() == false) //dont want to keep going forward if localizing
-            Navigation.travelTo(x, y); 
+            Navigation.travelToParallel(x, y); 
       }
       //currently navigating
       sleepFor(200);
     }
-    Navigation.travelTo(x, y);
+    Navigation.travelToParallel(x, y);
   }
 }
