@@ -19,10 +19,10 @@ public class LightLocalizer {
    * Makes the robot go to the closest intersection of the axes
    */
   public static void localizeDistance() {
-    Main.ENABLE_CORRECTION = false;
+    OdometryCorrection.ENABLE_CORRECTION = false;
     leftMotor.rotate(-Navigation.convertDistance(2), true); //to prevent being over the line, travel backwards
     rightMotor.rotate(-Navigation.convertDistance(2), false);
-    Main.ENABLE_CORRECTION = true;
+    OdometryCorrection.ENABLE_CORRECTION = true;
     LOCALIZING = true;
     LOCALIZINGY = true;
     leftMotor.setSpeed(100);
@@ -30,22 +30,22 @@ public class LightLocalizer {
     Navigation.travelTo(odometer.getXYT()[0] - 5, odometer.getXYT()[1] + 50);
    // Button.waitForAnyPress();
     sleepFor(500);
- //   Main.ENABLE_CORRECTION = false;
+ //   OdometryCorrection.ENABLE_CORRECTION = false;
  //   leftMotor.rotate(Navigation.convertDistance(12), true);
  //   rightMotor.rotate(Navigation.convertDistance(12), false);
     //back up
     LOCALIZINGY=false;
     LOCALIZINGX = true;
-    Main.ENABLE_CORRECTION = false;
+    OdometryCorrection.ENABLE_CORRECTION = false;
     Sound.beepSequenceUp();
     Navigation.travelTo(odometer.getXYT()[0], STARTING_Y); 
  
-    Main.ENABLE_CORRECTION = true;
+    OdometryCorrection.ENABLE_CORRECTION = true;
     Sound.buzz();
     //Button.waitForAnyPress();
     sleepFor(500);
     Navigation.travelTo(odometer.getXYT()[0]+ 20, odometer.getXYT()[1]);
-    Main.ENABLE_CORRECTION = false;
+    OdometryCorrection.ENABLE_CORRECTION = false;
     LOCALIZINGX = false;
     LOCALIZING = false;
   //  Navigation.travelTo(STARTING_X, STARTING_Y);
@@ -58,7 +58,7 @@ public class LightLocalizer {
   //  odometer.setTheta(-90); //hardcoded
     Navigation.turnTo(0);
     sleepFor(200);
-    Main.ENABLE_CORRECTION = true;
+    OdometryCorrection.ENABLE_CORRECTION = true;
     Sound.twoBeeps();
     Sound.twoBeeps();
   //  System.out.println("Current coord: " + (int) odometer.getXYT()[0] + ", "+ (int) odometer.getXYT()[1] +", " + (int) odometer.getXYT()[2]);

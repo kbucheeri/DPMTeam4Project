@@ -8,7 +8,7 @@ import lejos.utility.TimerListener;
 
 /**
  * Samples the light sensor and applies filtering and difference calculations.
- *
+ * Samples the left sensor
  */
 public class lightPoller implements TimerListener {
   public static int lintensity;
@@ -27,8 +27,8 @@ public class lightPoller implements TimerListener {
   public static void initialize(int rate) {
     double sum = 0;
     for (int i = 0; i < 30; i++) {
-      float[] lightData = new float[lightSensor.sampleSize()];
-      lightSensor.getRedMode().fetchSample(lightData, 0);
+      float[] lightData = new float[leftSensor.sampleSize()];
+      leftSensor.getRedMode().fetchSample(lightData, 0);
       sum += (lightData[0] * 1024) / 30.0;
       Main.sleepFor(30);
     }
@@ -71,8 +71,8 @@ public class lightPoller implements TimerListener {
    * @return The average of the previous light sensor intensity values.
    */
   public static void calculateIntensity() {
-    float[] lightData = new float[lightSensor.sampleSize()];
-    lightSensor.getRedMode().fetchSample(lightData, 0);
+    float[] lightData = new float[leftSensor.sampleSize()];
+    leftSensor.getRedMode().fetchSample(lightData, 0);
     /**
      * Resizing the actual intensity values to make it more readable and thus easier to test. Also easier to deal with
      * ints than double precision
@@ -97,7 +97,7 @@ public class lightPoller implements TimerListener {
     double angle = 0;
     // DETECTED A LINE
     if (ldiff < LIGHT_DIFF_THRESHOLD && leftMotor.isMoving() && steadyState == true
-        && Main.ENABLE_CORRECTION == true) {
+        && OdometryCorrection.ENABLE_CORRECTION == true) {
       steadyState = false;
       /**
        * slow down other motor if this is 1st line detected

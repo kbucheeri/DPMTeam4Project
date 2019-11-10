@@ -17,10 +17,19 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
  */
 public class OurResources {
   /**
-   * Derivative threshold for detecting lines.
+   * The tile size in centimeters.
    */
-  public static final int LIGHT_DIFF_THRESHOLD = -55;
-  /**
+  public static final double TILE_SIZE = 30.48;
+
+    /**
+     * polling rate for the light sensors
+     */
+    public static int LIGHT_RATE = 100;
+    /**
+     * Derivative threshold for detecting lines.
+     */
+    public static final int LIGHT_DIFF_THRESHOLD = -75;
+/**
    * distance to back up after detecting a line
    */
   public static final int BACKUP_DISTANCE = 10;
@@ -35,12 +44,16 @@ public class OurResources {
   /**
    * The wheel radius in centimeters.
    */
-  public static final double WHEEL_RAD = 2.130;
-
+  public static final double WHEEL_RAD = 2.05;
+  /**
+   * The coordinates of the nearest starting grid intersection
+   */
+    public static double STARTING_X = 0 * TILE_SIZE;
+    public static double STARTING_Y = 0 * TILE_SIZE;
   /**
    * The robot width in centimeters.
    */
-  public static final double TRACK = 12.2;
+  public static final double TRACK = 9.45;
   /**
    * Wall follower speed
    */
@@ -81,11 +94,7 @@ public class OurResources {
    * Speed when moving launcher to initial position
    */
   public static final int RESET_SPEED = 250;
-  /**
-   * The tile size in centimeters.
-   */
-  public static final double TILE_SIZE = 30.48;
-
+  
   /**
    * The left motor.
    */
@@ -102,10 +111,6 @@ public class OurResources {
   public static final EV3LargeRegulatedMotor launchMotor1 = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
   public static final EV3LargeRegulatedMotor launchMotor2 = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 
-  /**
-   * The color sensor.
-   */
-   public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
   /**
    * The ultrasonic sensor
    */

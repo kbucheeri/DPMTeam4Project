@@ -5,9 +5,15 @@ import static ca.mcgill.ecse211.team4.Navigation.*;
 import lejos.hardware.Sound;
 import lejos.utility.Timer;
 import lejos.utility.TimerListener;
-
+/**
+ * 
+ * @author Khaled
+ * Does odometry correction by correcting the angle and distance
+ */
 public class OdometryCorrection {
-
+  /**
+   * Sets correcting status to true
+   */
   public static void startCorrecting() {
     correctingStatus = true;
   }
@@ -78,9 +84,7 @@ public class OdometryCorrection {
   private static boolean correctionDone = true;
 
   /**
-   * tells robot if done correcting (To issue another navigation command
-   * 
-   * @return
+   * tells robot if done correcting (To issue another navigation command)
    */
   public static boolean doneCorrecting() {
     return correctionDone;
@@ -99,9 +103,7 @@ public class OdometryCorrection {
    * @param status - set correction to true/false. True means you enable correction
    */
   public static void toggleCorrection(boolean status) {
-    Main.ENABLE_CORRECTION = status;
+    ENABLE_CORRECTION = status;
   }
-  /**
-   * starts correction
-   */
+  public static boolean ENABLE_CORRECTION = true;
 }

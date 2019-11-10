@@ -8,6 +8,7 @@ import lejos.utility.TimerListener;
 
 /**
  * Samples the light sensor and applies filtering and difference calculations.
+ * Uses hardware clock to obtain more reliable polling
  *
  */
 public class rightPoller implements TimerListener {
@@ -23,8 +24,8 @@ public class rightPoller implements TimerListener {
   public static void initialize(int rate) {
     double sum = 0;
     for (int i = 0; i < 30; i++) {
-      float[] lightData = new float[lightSensor.sampleSize()];
-      lightSensor.getRedMode().fetchSample(lightData, 0);
+      float[] lightData = new float[rightSensor.sampleSize()];
+      rightSensor.getRedMode().fetchSample(lightData, 0);
       sum += (lightData[0] * 1024) / 30.0;
       Main.sleepFor(30);
     }
@@ -98,7 +99,7 @@ public class rightPoller implements TimerListener {
     double angle = 0;
     // DETECTED A LINE
     if (ldiff < LIGHT_DIFF_THRESHOLD && rightMotor.isMoving() 
-        && steadyState == true &&  Main.ENABLE_CORRECTION == true) {
+        && steadyState == true &&  OdometryCorrection.ENABLE_CORRECTION == true) {
       steadyState= false;
       /**
        * slow down other motor if this is 1st line detected
