@@ -30,7 +30,7 @@ public class Resources {
    * The IP address of the server that transmits data to the robot. Set this to the default for the
    * beta demo and competition.
    */
-  public static final String SERVER_IP = "192.168.2.13";
+  public static final String SERVER_IP = "192.168.2.28";
   
   /**
    * Your team number.
@@ -88,7 +88,7 @@ public class Resources {
   /**
    * The speed at which the robot moves forward in degrees per second.
    */
-  public static final int FORWARD_SPEED = 120; // slowed it down to give motor to increase correction
+  public static int FORWARD_SPEED = 120; // slowed it down to give motor to increase correction
 
   /**
    * The speed at which the robot rotates in degrees per second.
@@ -120,7 +120,7 @@ public class Resources {
   /**
    * Speed when moving launcher to initial position
    */
-  public static final int RESET_SPEED = 250;
+  public static final int RESET_SPEED = 150;
  
 /**
  * The coordinates of the nearest starting grid intersection
@@ -229,11 +229,6 @@ public class Resources {
    */
   public static Point bin = new Point(get("BIN_x"), get("BIN_y"));
   // Controller
-  /**
-   * The coordinates of the nearest starting grid intersection
-   */
-    public static double STARTING_X = 0 * TILE_SIZE;
-    public static double STARTING_Y = 0 * TILE_SIZE;
   /**
    * Offset from the wall (cm).
    */

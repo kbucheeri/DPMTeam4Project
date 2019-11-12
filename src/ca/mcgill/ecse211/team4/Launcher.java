@@ -53,8 +53,8 @@ public class Launcher {
    * @param angle angle relative to neutral/loading position
    */
   public static void moveLaunchers(int angle) {
-    Resources.launchMotor1.rotateTo(-angle, true);
-    Resources.launchMotor2.rotateTo(-angle, false);
+    Resources.launchMotor1.rotateTo(angle, true);
+    Resources.launchMotor2.rotateTo(angle, false);
   }
 
   /**
@@ -65,7 +65,7 @@ public class Launcher {
     launchMotor1.setSpeed(RESET_SPEED);
     launchMotor2.setSpeed(RESET_SPEED);
     Main.sleepFor(200);
-    moveLaunchers(-150);
+    moveLaunchers(-50);
     /**
      * set it back to the launch speed.
      */
@@ -76,7 +76,7 @@ public class Launcher {
    * Press up and down to change launcher speed
    */
   public static void launchThenWaitTest() {
-    int speed = 800;
+    int speed = 500;
     launchMotor1.setAcceleration(999999);
     launchMotor2.setAcceleration(999999);
     launchMotor1.setSpeed(speed);
@@ -92,7 +92,7 @@ public class Launcher {
       launchMotor1.setSpeed(speed);
       launchMotor2.setSpeed(speed);
       Sound.beepSequence();
-      moveLaunchers(100);
+      moveLaunchers(50);
       launchMotor1.stop();
       launchMotor2.stop();
       Main.sleepFor(500);
@@ -105,7 +105,7 @@ public class Launcher {
         {
           break;
         }
-/*      else if(choice == Button.ID_DOWN)
+      else if(choice == Button.ID_DOWN)
         speed -= 100;
       else if(choice == Button.ID_LEFT)
         speed -= 25;
@@ -113,7 +113,6 @@ public class Launcher {
         speed += 25;
       else if(choice == Button.ID_UP)
         speed += 100;
-        */
       System.out.println("speed: " + speed);
       Sound.beepSequence();
       Main.sleepFor(1000);

@@ -19,8 +19,8 @@ public class UltrasonicLocalizer {
     int firstEdge = 370; // initalize to impossible value for the conditions later on
     int secondEdge = 370;
     int prevData = 0;
-    leftMotor.setSpeed(130);
-    rightMotor.setSpeed(130);
+    leftMotor.setSpeed(100);
+    rightMotor.setSpeed(100);
     leftMotor.forward();
     rightMotor.backward();
     // stop when both are not 370
@@ -59,7 +59,6 @@ public class UltrasonicLocalizer {
 
     }
     // slow down ultrasonic polling because its no longer necessary; occupy less processor time.
-    UltrasonicPoller.setSleepTime(500);
     // get average of both data
     int ave = (firstEdge + secondEdge) / 2;
     System.out.println("\n\n\n\n");
@@ -86,14 +85,14 @@ public class UltrasonicLocalizer {
     int firstEdge = 370; // initalize to impossible value for the conditions later on
     int secondEdge = 370;
     int prevData = 100;
-    leftMotor.setSpeed(130);
-    rightMotor.setSpeed(130);
+    leftMotor.setSpeed(100);
+    rightMotor.setSpeed(100);
     leftMotor.forward();
     rightMotor.backward();
     // stop when both are not 370
     while (firstEdge == 370) {
       int theta = (int) Resources.odometer.getXYT()[2];
-      int data = UltrasonicPoller.getDistance();
+      int data = kUltrasonicPoller.getDistance();
       /**
        * Is below threshold and there was also a drop TODO implement noise margin
        */
@@ -114,7 +113,7 @@ public class UltrasonicLocalizer {
     
     while (secondEdge == 370) {
       int theta = (int) Resources.odometer.getXYT()[2];
-      int data = UltrasonicPoller.getDistance();
+      int data = kUltrasonicPoller.getDistance();
       /**
        * Is below threshold and there was also a drop
        */
@@ -126,22 +125,19 @@ public class UltrasonicLocalizer {
       prevData = data;
 
     }
+    leftMotor.stop();
+    rightMotor.stop();
     // slow down ultrasonic polling because its no longer necessary; occupy less processor time.
-    UltrasonicPoller.setSleepTime(500);
     // get average of both data
     int ave = (firstEdge + secondEdge) / 2;
-    System.out.println("\n\n\n\n");
-    System.out.println(firstEdge + ",  " + secondEdge + " average: " + ave);
     double dtheta;
     // detects left wall first
     if (firstEdge > secondEdge)
       dtheta = 220 - ave;
     else
-      dtheta = 215 - 180 - ave;
+      dtheta = 220 - 180 - ave;
     Resources.odometer.incrementTheta(dtheta);
-
-    // wait for reading to stabilize before measuring vertical distance.
-
+    Main.sleepFor(300);
     Navigation.turnTo(0);
   }
 }

@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
+import lejos.hardware.lcd.LCD;
+import lejos.utility.Timer;
 
 /**
  * The main driver class for the entire program.
@@ -50,7 +52,10 @@ public class Main {
     
     //Localize to starting point
     localizePosition();
-       
+    LCD.clear();
+    System.out.println(odometer.getXYT());
+    Button.waitForAnyPress();
+    
     //Get team color
     color = getColor();
     
@@ -64,15 +69,16 @@ public class Main {
     
     //robot is currently at top right corner of given corner of the field (0,1,2 or 3) after localization
     int currPos[] = getStartingPoint(team.corner);
-    odometer.setXYT(getRealCoord(currPos[0]), getRealCoord(currPos[1]), 0);
-
+    odometer.setXYT(getRealCoord(currPos[0]), getRealCoord(currPos[1]), currPos[2]);
+    Navigation.turnTo(0);
+    Button.waitForAnyPress();
    
    //Get coordinates for entry point of the tunnel
      tunnel_entry_x = getRealCoord(team.tunnelCoords[0]-1);
      tunnel_entry_y = getRealCoord((team.tunnelCoords[1]+(team.tunnelCoords[3]))/2);
          
     //Navigate to tunnel entry point
-    Navigation.travelTo(tunnel_entry_x, tunnel_entry_y);    
+    Navigation.travelToParallel(tunnel_entry_x, tunnel_entry_y);    
     
     //Navigate to tunnel exit point
     tunnel_exit_x = getRealCoord((team.tunnelCoords[3])+1);
@@ -80,6 +86,8 @@ public class Main {
     
     Navigation.travelTo(tunnel_exit_x, tunnel_exit_y);
     Sound.beepSequence();
+    Button.waitForAnyPress();
+    Launcher.launchThenWaitTest();
     //Navigate to launch point
     ObstacleAvoider oa = new ObstacleAvoider(odometer, WHEEL_RAD, TRACK, TILE_SIZE);
     oa.boolTravelTo((double)tunnel_exit_x, (double)tunnel_exit_y);
@@ -104,12 +112,16 @@ public class Main {
    * Uses ultrasonic localization to determine angle and adjust robot to 0 degrees
    */
   public static void localizeAngle() {
-    //start ultrasonic poller to get data for angle position
-    new Thread(new UltrasonicPoller()).start();
-    sleepFor(1000);
-    UltrasonicLocalizer.RisingEdge(); //uses rising edge to determine angle position from sensor readings
-    sleepFor(500);
-    UltrasonicPoller.setSleepTime(2000);
+    kUltrasonicPoller usPoller = new kUltrasonicPoller();
+    Timer usTimer = new Timer(250, usPoller);
+    lightPoller.initialize(200); 
+    rightPoller.initialize(200);
+    usTimer.start();
+    sleepFor(200);
+    UltrasonicLocalizer.RisingEdge();
+    sleepFor(500); 
+    Sound.buzz();
+    usTimer.setDelay(5000);     // increase sleep time to decrease processing requirement*/
   }
   
   /**
@@ -119,10 +131,10 @@ public class Main {
    */
   public static void localizePosition() {
     //start light sensor poller to get data to determine position
-    new Thread(new lightPoller()).start();
-     LightLocalizer.localizeDistance(); //localizes to the right-top corner of the square
-     sleepFor(1000);
-     lightPoller.changeSleepTime(1000);
+   
+    lightPoller.begin();
+    rightPoller.begin();
+    LightLocalizer.localizeDistance();
   }
   /**
    * Gets color for the team
@@ -147,28 +159,30 @@ public class Main {
    * 
    * @param int initial - will be replaced by the value of the corner the robot is in (0,1,2 or 3)
    * @return 
-   * @return array of position coordinates
+   * @return array of position coordinates, and angle
    */
    public static int[] getStartingPoint(int initial) {
-    int[] position = new int[2];
+    int[] position = new int[3];
     
     //checks the value of initial, sets the position values accordingly
      switch(initial) {
        case 0:
          position[0] = 1;
          position[1] = 1;
+         position[2] = 0;
         
        case 1:
          position[0] = 14;
          position[1] = 1;
-         
+         position[2] = 270;
        case 2:
          position[0] = 14;
          position[1] = 8;
-         
+         position[2] = 180;
        case 3:
          position[0] = 1;
          position[1] = 8;
+         position[2] = 90;
      }
      
      //return an array of size 2, containing x and y
