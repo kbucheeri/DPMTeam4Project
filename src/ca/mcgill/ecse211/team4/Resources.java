@@ -51,10 +51,15 @@ public class Resources {
   // DECLARE YOUR CURRENT RESOURCES HERE
   // eg, motors, sensors, constants, etc
   //////////////////////////////////////
-  /**
+
+   /**
+   * The tile size in centimeters.
+   */
+  public static final double TILE_SIZE = 30.48;
+    /**
    * Derivative threshold for detecting lines.
    */
-  public static final int LIGHT_DIFF_THRESHOLD = -55;
+  public static final int LIGHT_DIFF_THRESHOLD = -75;
   /**
    * distance to back up after detecting a line
    */
@@ -70,12 +75,12 @@ public class Resources {
   /**
    * The wheel radius in centimeters.
    */
-  public static final double WHEEL_RAD = 2.130;
+  public static final double WHEEL_RAD = 2.075;
 
   /**
    * The robot width in centimeters.
    */
-  public static final double TRACK = 12.2;
+  public static final double TRACK = 9.4;
   /**
    * Wall follower speed
    */
@@ -83,7 +88,7 @@ public class Resources {
   /**
    * The speed at which the robot moves forward in degrees per second.
    */
-  public static final int FORWARD_SPEED = 150; // slowed it down to give motor to increase correction
+  public static final int FORWARD_SPEED = 120; // slowed it down to give motor to increase correction
 
   /**
    * The speed at which the robot rotates in degrees per second.
@@ -116,11 +121,12 @@ public class Resources {
    * Speed when moving launcher to initial position
    */
   public static final int RESET_SPEED = 250;
-  /**
-   * The tile size in centimeters.
-   */
-  public static final double TILE_SIZE = 30.48;
-
+ 
+/**
+ * The coordinates of the nearest starting grid intersection
+ */
+  public static double STARTING_X = 0 * TILE_SIZE;
+  public static double STARTING_Y = 0 * TILE_SIZE;
   /**
    * The left motor.
    */
@@ -137,10 +143,14 @@ public class Resources {
   public static final EV3LargeRegulatedMotor launchMotor1 = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
   public static final EV3LargeRegulatedMotor launchMotor2 = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 
-  /**
-   * The color sensor.
+    /**
+   * The left sensor.
    */
-   public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S3);
+   public static final EV3ColorSensor lightSensor = new EV3ColorSensor(LocalEV3.get().getPort("S2"));
+  /**
+  The right sensor
+  */
+   public static final EV3ColorSensor rightSensor = new EV3ColorSensor(LocalEV3.get().getPort("S3"));
   /**
    * The ultrasonic sensor
    */
