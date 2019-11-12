@@ -1,6 +1,7 @@
 package ca.mcgill.ecse211.team4;
 
 import static ca.mcgill.ecse211.team4.Resources.*;
+import java.util.Arrays;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
@@ -20,19 +21,21 @@ public class LightLocalizer {
 	   */
 	  public static void localizeDistance() {
 	    LOCALIZING = true;
+	    FORWARD_SPEED = 70;
 	    Main.ENABLE_CORRECTION = false;
 	    moveBackwards(5);//to prevent issues with starting over the line
 	    Main.ENABLE_CORRECTION = true;
 
 	    LOCALIZINGY = true;
-	    FORWARD_SPEED = 80;
+	   
 	    /*
 	     * Move forward until you detect a line
 	     */
 	    Navigation.travelTo(odometer.getXYT()[0] - 15, odometer.getXYT()[1] + 50);
-	    LOCALIZINGY=false;
+	    LOCALIZINGY=false;	   
 	    sleepFor(350);
-	    System.out.println(odometer.getXYT());
+	    odometer.setXYT(odometer.getXYT()[0], STARTING_Y - SENSOR_TO_WHEEL_DISTANCE, 0);
+	    System.out.println(Arrays.toString(odometer.getXYT()));
 	    Main.ENABLE_CORRECTION = false;
 	    /*
 	     * move on to the line

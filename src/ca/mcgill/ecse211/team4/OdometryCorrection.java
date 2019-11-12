@@ -60,11 +60,12 @@ public class OdometryCorrection {
       if (LightLocalizer.LOCALIZING == true) {
         if (LightLocalizer.LOCALIZINGY == true)
           odometer.setTheta(0);
-        else
+        else if(LightLocalizer.LOCALIZINGX == true)
           odometer.setTheta(90);
-      } else {
-        if (Math.abs(initial_angle - currentPosition[2]) < 30) // Too much correction. Probably a fault
-          odometer.setTheta(determineAngle(odometer.getXYT()[2]));
+      } 
+      else {
+        if (Math.abs(initial_angle - currentPosition[2]) < 30 && Navigation.getDirection() >= 0) // Too much correction. Probably a fault
+          odometer.setTheta(Navigation.getDirection());
       }
       correctingStatus = false;
       correctionDone = true; // correcting ended

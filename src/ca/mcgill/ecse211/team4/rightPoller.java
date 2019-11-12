@@ -107,7 +107,7 @@ public class rightPoller implements TimerListener {
       if(leftMotor.isMoving() == true)
         {
           angle = odometer.getXYT()[2];
-          leftMotor.setSpeed(100);
+       //   leftMotor.setSpeed(100);
         }
       rightMotor.stop();
    //   System.out.println("\n detected right line \n");

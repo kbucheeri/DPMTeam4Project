@@ -106,7 +106,7 @@ public class lightPoller implements TimerListener {
        */
       if (rightMotor.isMoving() == true) {
         angle = odometer.getXYT()[2];
-        rightMotor.setSpeed(100);
+      //  rightMotor.setSpeed(100);
       }
       //System.out.println("\n detected left line \n");
       leftMotor.stop();

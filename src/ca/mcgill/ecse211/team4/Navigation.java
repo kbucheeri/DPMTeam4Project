@@ -11,6 +11,11 @@ import lejos.hardware.Sound;
  */
 
 public class Navigation {
+  private static boolean navigationStatus = false;
+  /**
+   * direction of the robot (0 = north, 1 = east, 2 = south, 3 = west)
+   */
+  private static int heading = -1;
   /**
    * Travels to a point but moving parallel to coordinate axes
    */
@@ -19,7 +24,39 @@ public class Navigation {
     travelTo(x, odometer.getXYT()[1]); //travel only in x direction
     travelTo(x, y); //x direction moved to, so now move in y.
   }
-  private static boolean navigationStatus = false;
+  /**
+   * Travels to a point but moving parallel to coordinate axes. Applies angle correction
+   */
+  public static void travelToWithCorrection(double x, double y)
+  {
+    boolean status = Main.ENABLE_CORRECTION;
+    Main.ENABLE_CORRECTION = true;
+    while(distanceFrom(x, odometer.getXYT()[1]) > 0.25)
+    {
+      if(x < odometer.getXYT()[1])
+      {
+        heading = 3;
+      }
+      else
+        heading = 1;
+      travelTo(x, odometer.getXYT()[1]); //travel only in x direction
+      Main.sleepFor(400);
+    }
+    while(distanceFrom(x, y) > 0.25)
+    {
+      if(y < odometer.getXYT()[1])
+      {
+        heading = 2;
+      }
+      else
+        heading = 0;
+      travelTo(odometer.getXYT()[0], y); //x direction moved to, so now move in y.
+      Main.sleepFor(400);
+    }
+    Main.ENABLE_CORRECTION = status;
+    heading = -1; //false value to ensure that shouldn't this method isnt used
+  }
+  
 
   public Navigation() {
     leftMotor.stop();
@@ -143,12 +180,16 @@ public class Navigation {
    * @param y
    */
   public static void turnToPoint(double x, double y) {
-    double[] currentPosition = odometer.getXYT();
-    // vector of the point from the robot
-    // Alternatively, the positon of the point with the robot as the origin
-    double vector[] = {currentPosition[0] - x, currentPosition[1] - y};
-    // turn to the angle of the vector
-    double angle = Math.atan2(vector[0], vector[1]);
+    double[] position = Resources.odometer.getXYT();
+    /**
+     * vector to move from current position to the next
+     */
+    double[] movementVector = {x - position[0], y - position[1]};
+
+    /*
+     * angle needed to face the robot towards the movement vector arctan(y/x)
+     */
+    double angle = Math.atan2(movementVector[0], movementVector[1]) * 180 / Math.PI; // signed arctan
     if (angle < 0) // set it to between 0 and 360
       angle += 360;
     turnTo(angle);
@@ -200,6 +241,26 @@ public class Navigation {
       return -1;
     else
       return 1;
+  }
+  /**
+   * returns the distance of the robot from a point
+   * @param x coordinate
+   * @param y coordinate
+   * @return the distance from that point
+   */
+  public static double distanceFrom(double x, double y)
+  {
+    double[] currentPos = odometer.getXYT();
+    return Math.hypot(x - currentPos[0], y - currentPos[1]);
+  }
+  /**
+   * returns which of the 4 cardinal directions the robot is supposed to be travelling in
+   * 
+   * @return
+   */
+  public static int getDirection()
+  {
+    return 90 * heading;
   }
 }
 

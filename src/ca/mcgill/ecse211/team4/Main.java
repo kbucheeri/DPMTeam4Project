@@ -7,6 +7,7 @@ package ca.mcgill.ecse211.team4;
 import static ca.mcgill.ecse211.team4.Resources.*;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
@@ -53,7 +54,7 @@ public class Main {
     //Localize to starting point
     localizePosition();
     LCD.clear();
-    System.out.println(odometer.getXYT());
+    System.out.println(Arrays.toString(odometer.getXYT()));
     Button.waitForAnyPress();
     
     //Get team color
@@ -70,8 +71,7 @@ public class Main {
     //robot is currently at top right corner of given corner of the field (0,1,2 or 3) after localization
     int currPos[] = getStartingPoint(team.corner);
     odometer.setXYT(getRealCoord(currPos[0]), getRealCoord(currPos[1]), currPos[2]);
-    Navigation.turnTo(0);
-    Button.waitForAnyPress();
+ 
    
    //Get coordinates for entry point of the tunnel
      tunnel_entry_x = getRealCoord(team.tunnelCoords[0]-1);
@@ -84,10 +84,10 @@ public class Main {
     tunnel_exit_x = getRealCoord((team.tunnelCoords[3])+1);
     tunnel_exit_y = tunnel_entry_y;
     
-    Navigation.travelTo(tunnel_exit_x, tunnel_exit_y);
+    //Navigation.travelTowithCorrection(tunnel_exit_x, tunnel_exit_y);
     Sound.beepSequence();
     Button.waitForAnyPress();
-    Launcher.launchThenWaitTest();
+   // Launcher.launchThenWaitTest();
     //Navigate to launch point
     ObstacleAvoider oa = new ObstacleAvoider(odometer, WHEEL_RAD, TRACK, TILE_SIZE);
     oa.boolTravelTo((double)tunnel_exit_x, (double)tunnel_exit_y);
@@ -114,10 +114,9 @@ public class Main {
   public static void localizeAngle() {
     kUltrasonicPoller usPoller = new kUltrasonicPoller();
     Timer usTimer = new Timer(250, usPoller);
-    lightPoller.initialize(200); 
-    rightPoller.initialize(200);
+    lightPoller.initialize(250); 
+    rightPoller.initialize(250);
     usTimer.start();
-    sleepFor(200);
     UltrasonicLocalizer.RisingEdge();
     sleepFor(500); 
     Sound.buzz();
